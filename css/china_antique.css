@@ -1,0 +1,99 @@
+*{
+	padding:0;
+	margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+html, body {
+	position: relative;
+	height: 100%;
+}
+.index_div{
+	border:#000 solid 1px;
+}
+.index_div header{
+	
+}
+.swiper-container {
+	width: 100%;
+	height: 100%;
+}
+.swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+.swiper-slide img{
+	width: 100%;
+}
+.index_nav_div{
+	color: #323232;
+	font-size: .28rem;
+	margin:.3rem 0;
+}
+.index_nav_div dl{
+	float: left;
+	width: 1.85rem;
+	text-align: center;
+}
+.index_nav_div dl img{
+	display: block;
+	width: 40%;
+	margin: auto;
+	margin-bottom: .2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

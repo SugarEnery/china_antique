@@ -3,38 +3,19 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>神州博古网</title>
+		<link href="css/publicStyle.css" rel="stylesheet" />
+		<link href="css/china_antique.css" rel="stylesheet" />
+		<script src="js/rem.js"></script>
 		<script src="js/jquery-3.1.1.js"></script>
+		
 	</head>
 	<body>
-		<ul>
-			<a href="ajax.html"><li>ajax</li></a> 
-			
-		</ul>
-		<div class="c">
-			<div class="reserve" value="1">立即预约</div>
-			<div class="reserve" value="2">立即预约</div>
-			<div class="reserve" value="3">立即预约</div>
-			<div class="reserve" value="4">立即预约</div>
+		<div class="index_div">
+			<header>
+				<img src="img/banner01.png">
+				<img src="img/banner02.png">
+				<img src="img/banner03.png">
+			</header>
 		</div>
-		<input type="button" value="提交" id="btn"/>
-		<script>
-			$(document).ready(function () {
-				$(".reserve").click(function(){
-				var aaa = document.getElementsByClassName("reserve");
-				var sss = aaa[0].getAttributeNode("value");
-				console.log(sss.value);
-				})
-				// $(".c div").click(function(){
-				// console.log($("this").attr("value"))
-				
-				// })
-				// $("#btn").click(function(){
-				// 	console.log($("reserve").attr("value"))
-
-				// })
-			})
-		</script>
-		  
-
 	</body>
 </html>
