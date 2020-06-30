@@ -66,18 +66,86 @@ html, body {
 	margin: auto;
 	margin-bottom: .2rem;
 }
-
-
-
-
-
-
-
-
-
-
-
-
+.index_experts{
+	overflow: hidden;
+	width: 100%;
+}
+.index_experts dl{
+	width: 90%;
+	overflow: hidden;
+	margin:.5rem auto;
+	box-shadow:  1px -1px 11px 4px #cccccc;
+}
+.index_experts dl dt img{
+	width: 100%;
+}
+.index_experts dl dt{
+	width: 50%;
+	float: left;
+	
+}
+.index_experts dl dd{
+	width: 45%;
+	float: left;
+	color:#323232;
+	padding-left: .5rem;
+	padding-top: .1rem;
+	
+}
+.inexpert_title {
+	font-size: .32rem;
+	margin-top: .4rem;
+}
+.inexpert_label{
+	margin-top: .3rem;
+}
+.inexpert_label span{
+	color: #FF0000;
+	font-size: .24rem;
+	padding:.05rem  .1rem;
+	border:#999999 solid 1px;
+	margin-left: .1rem;
+	border-radius: .1rem;
+	
+}
+.inexpert_time{
+	font-size: .24rem;
+	margin-top: .3rem;
+}
+.index_classify_nav li{
+	width: 20%;
+	float: left;
+	text-align: center;
+	color: #323232;
+	padding-bottom: .1rem;
+	font-size: .28rem;
+	margin:0 2.5% ;
+}
+.classify_nav_cheaked{
+	border-bottom: #007AFF solid 3px;
+}
+.index_classify_content dl{
+	width: 100%;
+	overflow: hidden;
+}
+.index_classify_content dl dt{
+	float: left;
+	width: 40%;
+}
+.index_classify_content dl dt img{
+	width: 100%;
+}
+.index_classify_content dl dd{
+	float: left;
+	width: 50%;
+	color: #666666;
+}
+.inclassify_title{
+	margin-top: .5rem;
+}
+.inclassify_time{
+	margin-top: .3rem;
+}
 
 
 
