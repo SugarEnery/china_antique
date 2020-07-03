@@ -117,9 +117,10 @@ html, body {
 	float: left;
 	text-align: center;
 	color: #323232;
-	padding-bottom: .1rem;
+	padding-bottom: .2rem;
 	font-size: .28rem;
-	margin:0 2.5% ;
+	margin:.3rem 2.5% ;
+	
 }
 .classify_nav_cheaked{
 	border-bottom: #007AFF solid 3px;
@@ -147,8 +148,10 @@ html, body {
 	margin-top: .3rem;
 }
 
-
-
+/* 专家列表 */
+.expert_introduce{
+	margin-top: .3rem;
+}
 
 
 
