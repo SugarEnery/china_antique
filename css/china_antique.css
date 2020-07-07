@@ -1,6 +1,7 @@
 *{
 	padding:0;
 	margin: 0;
+	color: #323232;
 }
 
 
@@ -155,15 +156,68 @@ html, body {
 
 
 
-
-
-
-
-
-
-
-
-
+/* 资讯列表 */
+.infor_div{
+	border:#000 solid 1px;
+	overflow: hidden;
+}
+.infor_banner{
+	width: ;
+}
+.infor_banner img{
+	width: 100%;
+}
+.infor_ul{
+	width: 100%;
+	clear: both;
+	padding:.3rem 0;
+}
+.infor_ul li{
+	float: left;
+	width: 30%;
+	color: #666666;
+	font-size: .28rem;
+	text-align: center;
+}
+.infor_content{
+	clear: both;
+	width: 95%;
+	margin: auto;
+	
+}
+.infor_content_title{
+	font-size: .28rem;
+	padding:.3rem 0;
+}
+.infor_cont_word dl{
+	overflow: hidden;
+	margin-top: .3rem;
+}
+.infor_cont_word dt{
+	float: left;
+	width: 40%;
+}
+.infor_cont_word  dt img{
+	width: 100%;
+}
+.infor_cont_word dd{
+	float: left;
+	width: 55%;
+	padding-left: .1rem;
+}
+.infor_world_title{
+	padding-top: .3rem;
+}
+.infor_world_sourse{
+	padding-top: .3rem;
+	font-size: .28rem;
+	color: #999999;
+}
+.infor_world_time{
+	padding-top: .3rem;
+	color: #999999;
+	font-size: .28rem;
+}
 
 
 
