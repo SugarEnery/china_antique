@@ -20,20 +20,17 @@ html, body {
 	height: 100%;
 }
 .index_div{
-	border:#000 solid 1px;
-}
-.index_div header{
-	
+	/* border:#000 solid 1px; */
 }
 .swiper-container {
 	width: 100%;
 	height: 100%;
 }
-.swiper-slide {
-	text-align: center;
-	font-size: 18px;
-	background: #fff;
 
+.swiper-slide {
+	/* text-align: center; */
+	font-size: .28rem;
+	background: #fff;
 	/* Center slide text vertically */
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -113,34 +110,27 @@ html, body {
 	font-size: .24rem;
 	margin-top: .3rem;
 }
-.index_classify_nav li{
-	width: 20%;
-	float: left;
-	text-align: center;
-	color: #323232;
-	padding-bottom: .2rem;
-	font-size: .28rem;
-	margin:.3rem 2.5% ;
-	
-}
-.classify_nav_cheaked{
-	border-bottom: #007AFF solid 3px;
+.index_classify_content{
+	width: 100%;
 }
 .index_classify_content dl{
 	width: 100%;
 	overflow: hidden;
+	margin-top: .2rem;
 }
 .index_classify_content dl dt{
 	float: left;
 	width: 40%;
 }
 .index_classify_content dl dt img{
-	width: 100%;
+	width: 80%;
+	margin: auto;
 }
 .index_classify_content dl dd{
 	float: left;
 	width: 50%;
 	color: #666666;
+	padding-left: .1rem;
 }
 .inclassify_title{
 	margin-top: .5rem;
@@ -158,7 +148,6 @@ html, body {
 
 /* 资讯列表 */
 .infor_div{
-	border:#000 solid 1px;
 	overflow: hidden;
 }
 .infor_banner{
@@ -219,6 +208,46 @@ html, body {
 	font-size: .28rem;
 }
 
-
-
+/* 专家列表 */
+.container {
+	/*width: 100%;*/
+	/* border: 1px solid #ccc; */
+}
+.swiper1 {
+	width: 100%;
+}
+.swiper1 .selected {
+	color: #ec5566;
+	border-bottom: 2px solid #ec5566;
+}
+.swiper1 .swiper-slide {
+	/* text-align: center; */
+	font-size: .28rem;
+	height: 50px;
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	cursor: pointer;
+}
+.swiper2 {
+	width: 100%;
+}
+.swiper2 .swiper-slide {
+	/* height: calc(100vh - 50px);//沾满全屏 */
+	/* background-color: #ccc; */
+	color: #fff;
+	/* text-align: center; */
+	box-sizing: border-box !important;
+	overflow-x: hidden !important;
+}
 
