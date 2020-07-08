@@ -250,4 +250,96 @@ html, body {
 	box-sizing: border-box !important;
 	overflow-x: hidden !important;
 }
+/* 资讯详情 */
+.infor_content{
+	width: 95%;
+	margin: auto;
+	padding:.3rem 0;
+}
+.infor_title{
+	padding-top:.3rem;
+} 
+.infor_mess{
+	font-size: .24rem;
+	padding:.1rem 0;
+	margin: .1rem 0;
+	overflow: hidden;
+}
+.infor_time{
+	padding:.1rem 0;
+	float: left;
+	color: #CCCCCC;
+}
+.infor_seedetail{
+	float: right;
+	color:#323232;
+	border:#000 solid 1px;
+	padding:.1rem .1rem;
+	border-radius: .1rem;
+}
+
+.center_img{
+	
+}
+.center_img img{
+	width: 100%;
+}
+.infor_uptitle{
+	padding:.2rem 0;
+	font-size: .28rem;
+	color: #666666;
+	
+}
+.infor_updetail p{
+	font-size: .28rem;
+	color: #999999;
+	line-height: .5rem;
+}
+.infor_footer{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	
+}
+.colect_btn{
+	width: 25%;
+	border: #CCCCCC solid 1px;
+	padding:.2rem 0;
+	text-align: center;
+	display: block;
+	float: left;
+	margin-left: .1rem;
+	
+}
+.assess_btns{
+	background-color: #FF0000;
+	color: #FFFFFF;
+	font-size: .28rem;
+	width: 70%;
+	display: block;
+	float: right;
+	padding: .25rem 0;
+	text-align: center;
+	border-radius: .1rem;
+	margin-right: .1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
