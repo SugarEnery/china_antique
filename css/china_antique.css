@@ -5,7 +5,6 @@
 }
 
 
-
 html, body {
 	position: relative;
 	height: 100%;
@@ -368,13 +367,41 @@ html, body {
 .colle_money{
 	color: #FF0000;
 }
-
-
-
-
-
-
-
+.auction_div{
+	width: 90%;
+	margin: auto;
+}
+.auction_title{
+	font-size: .28rem;
+	padding:.2rem 0;
+}
+.auction_dl{
+	width: 100%;
+	overflow: hidden;
+	color: #323232;
+}
+.auction_dl dt{
+	width: 30%;
+	float: left;
+}
+.auction_dl dt img{
+	width: 100%;
+}
+.auction_dl dd{
+	width: 60%;
+	float: left;
+	padding-left: .1rem;
+}
+.auction_title{
+	font-size: .28rem;
+}
+.suction_money{
+	font-size: .24rem;
+}
+.suction_moneyi{
+	font-size: .24rem;
+	font-style:normal;
+}
 
 
 
