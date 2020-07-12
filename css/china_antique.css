@@ -3,7 +3,10 @@
 	margin: 0;
 	color: #323232;
 }
-
+i,b{
+	font-style:normal;
+	font-weight: normal;
+}
 
 html, body {
 	position: relative;
@@ -368,17 +371,39 @@ html, body {
 	color: #FF0000;
 }
 .auction_div{
-	width: 90%;
+	width: 100%;
 	margin: auto;
+	min-height: 100%;
+	background-color: #f5f5f5;
+	
+}
+.action_header{
+	background-color: #FFFFFF;
+	padding:0 .5em ;
+	overflow: hidden;
+}
+.auction_bottom{
+	background-color: #FFFFFF;
+	padding:0 .5em ;
+	overflow: hidden;
 }
 .auction_title{
 	font-size: .28rem;
 	padding:.2rem 0;
 }
+.auction_titletwo{
+	padding:.2rem .2rem;
+	font-size: .28rem;
+	color: #666666;
+}
 .auction_dl{
 	width: 100%;
 	overflow: hidden;
 	color: #323232;
+	position: relative;
+	padding:.2rem 0;
+	border-top: #CCCCCC solid 1px;
+	border-bottom: #CCCCCC solid 1px;
 }
 .auction_dl dt{
 	width: 30%;
@@ -392,15 +417,126 @@ html, body {
 	float: left;
 	padding-left: .1rem;
 }
+.auction_titlep{
+	font-size: .28rem;
+	color: #666666;
+	padding:.2rem 0;
+}
 .auction_title{
 	font-size: .28rem;
 }
 .suction_money{
 	font-size: .24rem;
+	padding-top: .2rem;
+	color: #999999;
 }
 .suction_moneyi{
 	font-size: .24rem;
 	font-style:normal;
+	color: #323232;
+}
+.cauction_pay{
+	position: absolute;
+	right: .1rem;
+	bottom: .5rem;
+	font-size: .28rem;
+	border: #999999 solid 1px;
+	padding:.05rem .15rem ;
+	border-radius: .1rem ;
+}
+.auction_endtime{
+	font-size: .24rem;
+	padding:.1rem 0;
+	float: right;
+}
+.auction_endtimei{
+	color: #FF0000;
+}
+.auction_infor{
+	clear: both;
+}
+.auction_infor p{
+	line-height: .6rem;
+	font-size: .28rem;
+}
+.auction_infor b{
+	padding-left: .3rem;
+	font-size: .24rem;
+	color: #333333;
+	line-height: .8rem;
+}
+.logistics{
+	border-top: #eeeeee solid 1px;
+}
+i.logistics_copy {
+	float: right;
+	color: #007AFF;
+	font-size: .24rem;
+}
+/* 鉴定详情 */
+.assess_div{
+	min-height: 100%;
+	background-color: #F5F5F5;
+}
+.assess_tishi{
+	float: right;
+	font-size: .24rem;
+	color: #FF0000;
+}
+.assess_infor{
+	clear: both;
+	background-color: #FFFFFF;
+	padding: .3rem .2rem ;
+}
+.assess_infor p{
+	line-height: .6rem;
+	font-size: .28rem;
+	color: #999999;
+}
+.assess_infor b{
+	padding-left: .3rem;
+	font-size: .24rem;
+	color: #333333;
+	line-height: .8rem;
+}
+.access_bottom{
+	background-color: #FFFFFF;
+	overflow: hidden;
+	font-size: .28rem;
+}
+
+.access_bottom{
+	padding:.3rem .2rem;
+}
+.access_bottom p{
+	line-height: .6rem;
+	font-size: .28rem;
+	color: #999999;
+}
+.assess_imgdiv img{
+	margin-top: .2rem;
+	width: 46%;
+	float: left;
+	margin-left: .2rem;
+}
+/* 个人中心 */
+.person_infor{
+	overflow: hidden;
+	border: #000 solid 1px;
+}
+.person_infor dt{
+	float: left;
+}
+.person_infor dd{
+	float: left;
+}
+.person_name{
+	font-size: .32rem;
+	color: #323232;
+}
+.person_state{
+	font-size: .28rem;
+	color: #666666;
 }
 
 
