@@ -538,6 +538,10 @@ i.logistics_copy {
 	font-size: .28rem;
 	color: #666666;
 }
+/* 鉴定评估上传 */
+.assess_banner img{
+	width: 100%;
+}
 
 
 
