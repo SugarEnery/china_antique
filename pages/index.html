@@ -10,7 +10,7 @@
 		<link href="../css/swiper.min.css" rel="stylesheet" />
 		<script src="../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../js/rem.js" type="text/javascript"></script>
-		
+		<script src="../js/config.js"></script>
 	</head>
 	<body>
 		<!-- banner -->
@@ -120,6 +120,38 @@
 		</div>
 	</body>
 	<script type="text/javascript">
+		// const loginIn = _Config_.API_PATH + 'api/login'; // 登陆
+		$(document).ready(function () {
+		    // window.onload = () => {
+		        // loginInA pi();
+		    })
+			// let loginInApi = () => {
+			// 		ajaxPromise({
+			// 			type: 'POST',
+			// 			url: loginIn,
+			// 			data: {
+							
+			// 			}
+			// 		}).then(res => {
+			// 			// console.log(res);
+						
+			// 		}).catch(err => {
+			// 			console.log(err);
+			// 		})
+			// 	}
+			$.ajax({          
+			       	 url:'http://api.chinabogu.com/api/login', 
+			         // dataType:"json",  
+			         type:"GET", 
+			         // async:"true",
+			         // data:'',
+			         success:function(data){
+						 console.log(data)
+					 },      
+			         error:function(err){
+						 console.log(err)
+					 }
+			});
 		// 菜单栏
 		$(function() {
 			function setCurrentSlide(ele, index) {
