@@ -14,22 +14,72 @@
 	</head>
 	<body>
 		<h1 class="assess_banner"><img src="../../img/banner02.png"></h1>
-		<div>
-			
+		<div class="idcard">
+			<form method="post" enctype="multipart/form-data" action="idcard_confirm.html" id="alive_form">
+				<input type="hidden" id="tel_idcard" name="tel" value="">
+				<input type="hidden" name="shzqt_url" value="/upload/uploadIDCardImage">
+				<input type="hidden" name="service" value="upload_idcard">
+				<input type="hidden" name="app" value="h5">
+				<div class="idcard_img_background">
+					<img src="../../img/id_people.png" class="idcard_img" id="idcard_i1">
+					<p class="p1"><img src="../../img/id_camera.png" width="60%"><input type="file" id="idcard_front" accept="image/*" onchange="imgPreview(this)" class="file-style" name="zheng"></p>
+					<p class="p2">点击上传eBay或雅虎图片</p>
+				</div>
+				<!-- <button type="submit" class="alive_btn" onclick="window.location.href='idcard_confirm.html'">上传</button> -->
+			<!-- </div> -->
+			</form>
 		</div>
-		<div>
-			
+		<div class="assess_content">
+			<label>
+				<span>拍品链接：</span><input type="text" placeholder="ebody雅虎链接或ID">	
+			</label>
+			<label>
+				<span>需求描述：</span><input type="text" placeholder="ebody雅虎链接或ID">	
+			</label>
+			<label>
+				<span>拍品级别：</span><input type="text" placeholder="ebody雅虎链接或ID">	
+			</label>
 		</div>
-		<label>
-			<span>拍品链接：</span><input type="text" placeholder="ebody雅虎链接或ID">	
-		</label>
-		<label>
-			<span>需求描述：</span><input type="text" placeholder="ebody雅虎链接或ID">	
-		</label>
-		<label>
-			<span>拍品级别：</span><input type="text" placeholder="ebody雅虎链接或ID">	
-		</label>
-		<input type="button" value="进行评估" />
+		<input type="button" value="进行评估"  class="assess_btn"/>
 	</body>
+	
+	<script>
+	    var loginPhone = localStorage.getItem('loginPhone_flow');
+	    $("#tel_idcard").val(loginPhone);
+	    function imgPreview(fileDom){
+	        var id = $(fileDom).attr('id');
+	        if(id == 'idcard_front'){
+	            id = 'idcard_i1';
+	        }else{
+	            id = 'idcard_i2';
+	        }
+	        //判断是否支持FileReader
+	        if (window.FileReader) {
+	            var reader = new FileReader();
+	        } else {
+	            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+	        }
+	
+	        //获取文件
+	        var file = fileDom.files[0];
+	        var imageType = /^image\//;
+	        //是否是图片
+	        if (!imageType.test(file.type)) {
+	            alert("请选择图片！");
+	            return;
+	        }
+	        //读取完成
+	        reader.onload = function(e) {
+	            //获取图片dom
+	            $("#"+id).removeClass('idcard_img');
+	            $("#"+id).addClass('idcard_img1');
+	            $("#"+id).parent().find('p').hide();
+	            var img = document.getElementById(id);
+	            //图片路径设置为读取的图片
+	            img.src = e.target.result;
+	        };
+	        reader.readAsDataURL(file);
+	    }
+	 </script>
 </html>
  

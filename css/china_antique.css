@@ -544,9 +544,102 @@ i.logistics_copy {
 }
 
 
-
-
-
-
-
+/* 上传图片样式 鉴定*/
+.idcard{
+	position: relative;
+	margin:0 auto;
+	font-size: 16px;
+	padding: 20px 10px;
+   
+}
+.idcard p{
+	font-size: 16px;
+	font-family: '微软雅黑', 'Lucida sans', Arial;
+}
+.idcard_img_background{
+	position: relative;
+	width:95%;
+	height: 200px;
+	text-align: center;
+	border-radius: 5px;
+	margin:20px auto;
+	
+}
+.idcard_img_background p{
+	position: absolute;
+	
+}
+.idcard_img_background p:last-child{
+	font-size:16px;
+}
+.p1{
+	left:50%;
+	transform: translate(-50%, -50%);
+	top:90px;
+	cursor: pointer;
+}
+.p1 img{
+	margin: auto;
+}
+.p2{
+	left:50%;
+	transform: translate(-50%, -50%);
+	top:150px;
+	cursor: pointer;
+	color:#000;
+	font-size:18px
+}
+.idcard_img{
+	width: 90%;
+	height: 200px;
+	opacity: 0.6;
+	margin: auto;
+}
+.idcard_img1{
+	width: 100%;
+	height: 180px;
+}
+.hide_p{
+	opacity: 0;
+}
+.alive_btn{
+	background-color: #FA554A;
+	border:none;
+	border-radius: 4px;
+	height:45px;
+	line-height:45px;
+	text-align: center;
+	color: #ffffff;
+	width: 80%;
+	font-size: 18px;
+	margin:10px auto ;
+	display: block;
+}
+input.file-style{
+	opacity: 0;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	top: 40px;
+	height:60px
+	
+}
+.assess_content{
+	width: 90%;
+	margin: auto;
+}
+.assess_content label{
+	display: block;
+	padding: .1rem 0;
+}
+.assess_btn{
+	background-color: darkred;
+	padding:.2rem 0;
+	width: 80%;
+	margin: auto;
+	display: block;
+	color: #FFFFFF;
+	font-size: .32rem;
+	margin-top: .3rem;
+}
 
