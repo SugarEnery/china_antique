@@ -7,44 +7,110 @@
 		<link href="../../css/publicStyle.css" rel="stylesheet" />
 		<link href="../../css/china_antique.css" rel="stylesheet" />
 		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="../../css/demo.css" rel="stylesheet" />
 		<link href="../../css/swiper.min.css" rel="stylesheet" />
 		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
+		<script src="../../js/config.js"></script>
 	</head>
 	<body>
 		<div class="infor_div">
 			<h1 class="infor_banner"><img src="../../img/banner01.png"></h1>
 			<ul class="infor_ul">
 				<li>排序<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
-				<li>类别<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
+				<li class="Sort">类别<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
 				<li>推荐<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
 			</ul>
+			<div class="Sort-eject Sort-height">
+			    <ul class="Sort-Sort" id="Sort-Sort">
+			        <!-- <li onclick="Sorts(this)">智能排序</li>
+			        <li onclick="Sorts(this)">离我最近</li>
+			        <li onclick="Sorts(this)">好评优先</li>
+			        <li onclick="Sorts(this)">最新发布</li>
+			        <li onclick="Sorts(this)">人气优先</li>
+			        <li onclick="Sorts(this)">价格最低</li>
+			        <li onclick="Sorts(this)">价格最高</li> -->
+			    </ul>
+			</div>
 			<div class="infor_content">
 				<p class="infor_content_title">VIP尊享海量精选古玩</p>
 				<div class="infor_cont_word">
-					<dl>
-						<dt><img src="../../img/infor_img.png"></dt>
-						<dd class="infor_world_title">标题一</dd>
-						<dd class="infor_world_sourse">雅虎</dd>
-						<dd class="infor_world_time">2020-06-11 <span>平台推荐指数</span></dd>
-					</dl>
-					<dl>
-						<dt><img src="../../img/infor_img.png"></dt>
-						<dd class="infor_world_title">标题一</dd>
-						<dd class="infor_world_sourse">雅虎</dd>
-						<dd class="infor_world_time">2020-06-11 <span>平台推荐指数</span></dd>
-					</dl>
-					<dl>
-						<dt><img src="../../img/infor_img.png"></dt>
-						<dd class="infor_world_title">标题一</dd>
-						<dd class="infor_world_sourse">雅虎</dd>
-						<dd class="infor_world_time">2020-06-11 <span>平台推荐指数</span></dd>
-					</dl>
+					<!-- 列表 -->
 				</div>
-				
-				
 			</div>
 		</div>
 	</body>
+	<script>
+		const inforList = _Config_.API_PATH + '/api/getRealList'//资讯列表
+		const inforclassList = _Config_.API_PATH + '/api/getRealTypeList'//资讯列表
+		$(document).ready(function () {
+			inforApi();
+		})
+		let inforApi = () => {
+			createAjax({
+				type: 'GET',
+				dataType: 'JSON',
+				url: inforList,
+				data: '',
+			}).success(res => {
+				console.log('列表',res);
+				var json = res.data.data;
+				for(var i=0;i<json.length;i++){
+					$(".infor_cont_word").append('<dl><dt><img src="'+json[i].images+'"></dt><dd class="infor_world_title">'+json[i].name+'</dd><dd class="infor_world_sourse">雅虎</dd><dd class="infor_world_time">'+json[i].created_time+'<span class="star"><i class="infor_ul_icon_star">'+json[i].recommend_num+'</i></span></dd></dl>')
+				}
+			}).error(err => {
+				console.log(err);
+			})
+			// 资讯分类列表
+			createAjax({
+				type: 'GET',
+				dataType: 'JSON',
+				url: inforclassList,
+				data: '',
+			}).success(res => {
+				console.log('列表',res);
+				var json = res.data;
+				for(var i=0;i<json.length;i++){
+					$(".Sort-Sort").append('<li onclick="Sorts(this)" value="'+json[i].id+'">'+json[i].name+'</li>')
+				}
+			}).error(err => {
+				console.log(err);
+			})
+		}
+		//Sort开始
+		
+		$(document).ready(function(){
+		    $(".Sort").click(function(){
+		        if ($('.Sort-eject').hasClass('grade-w-roll')) {
+		            $('.Sort-eject').removeClass('grade-w-roll');
+		        } else {
+		            $('.Sort-eject').addClass('grade-w-roll');
+		        }
+		    });
+		});
+		//判断页面是否有弹出
+		$(document).ready(function(){
+		    $(".Sort").click(function(){
+		        if ($('.grade-eject').hasClass('grade-w-roll')){
+		            $('.grade-eject').removeClass('grade-w-roll');
+		        };
+		
+		    });
+		});
+		//js点击事件监听开始
+		function Sorts(sbj){
+		    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
+		    for (var i = 0; i < arr.length; i++){
+		        var a = arr[i];
+		        a.style.borderBottom = "";
+		    };
+			
+		    sbj.style.borderBottom = "solid 1px #ff7c08";
+			console.log(sbj.value);
+			if(sbj.value){
+				$('.Sort-eject').removeClass('grade-w-roll');
+			}
+		}
+	</script>
 </html>
