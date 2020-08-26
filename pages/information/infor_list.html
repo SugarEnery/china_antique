@@ -18,19 +18,25 @@
 		<div class="infor_div">
 			<h1 class="infor_banner"><img src="../../img/banner01.png"></h1>
 			<ul class="infor_ul">
-				<li>排序<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
+				<li class="Sort1">排序<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
 				<li class="Sort">类别<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
-				<li>推荐<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
+				<li class="Category">推荐<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
 			</ul>
-			<div class="Sort-eject Sort-height">
+			<div class="grade-eject">
 			    <ul class="Sort-Sort" id="Sort-Sort">
-			        <!-- <li onclick="Sorts(this)">智能排序</li>
-			        <li onclick="Sorts(this)">离我最近</li>
-			        <li onclick="Sorts(this)">好评优先</li>
-			        <li onclick="Sorts(this)">最新发布</li>
-			        <li onclick="Sorts(this)">人气优先</li>
-			        <li onclick="Sorts(this)">价格最低</li>
-			        <li onclick="Sorts(this)">价格最高</li> -->
+			        <li onclick="grade(this)" value="1">从早到晚</li>
+			        <li onclick="grade(this)" value="2">从晚到早</li>
+			    </ul>
+			</div>
+			<div class="Sort-eject Sort-height">
+			    <ul class="Sort-Sort Sort_class" id="Sort-Sort">
+					
+			    </ul>
+			</div>
+			<div class="Category-eject">
+			    <ul class="Sort-Sort" id="Sort-Sort">
+			        <li onclick="Categorytw(this)" value="1">从低到高</li>
+			        <li onclick="Categorytw(this)" value="2">从高到底</li>
 			    </ul>
 			</div>
 			<div class="infor_content">
@@ -42,26 +48,37 @@
 		</div>
 	</body>
 	<script>
+		const bannerList = _Config_.API_PATH + '/api/getAdsList'//广告列表
 		const inforList = _Config_.API_PATH + '/api/getRealList'//资讯列表
 		const inforclassList = _Config_.API_PATH + '/api/getRealTypeList'//资讯列表
+		const bannertype = 3;//资讯banner
 		$(document).ready(function () {
+			bannerApi();
+			inforclassApi();
 			inforApi();
 		})
-		let inforApi = () => {
+		let bannerApi = () => {
 			createAjax({
 				type: 'GET',
 				dataType: 'JSON',
-				url: inforList,
-				data: '',
-			}).success(res => {
-				console.log('列表',res);
-				var json = res.data.data;
-				for(var i=0;i<json.length;i++){
-					$(".infor_cont_word").append('<dl><dt><img src="'+json[i].images+'"></dt><dd class="infor_world_title">'+json[i].name+'</dd><dd class="infor_world_sourse">雅虎</dd><dd class="infor_world_time">'+json[i].created_time+'<span class="star"><i class="infor_ul_icon_star">'+json[i].recommend_num+'</i></span></dd></dl>')
+				url: bannerList,
+				data: {	
+					type:bannertype,
 				}
+			}).success(res => {
+				// console.log(res);
+				if(res.data.length<0){
+					for(var i=0;i<res.data.length;i++){
+						$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data[i].image+'"></div>');
+					}	
+				}else{
+					console.log("banner暂未更新！")
+				}	
 			}).error(err => {
 				console.log(err);
 			})
+		}
+		let inforclassApi = () => {
 			// 资讯分类列表
 			createAjax({
 				type: 'GET',
@@ -69,17 +86,44 @@
 				url: inforclassList,
 				data: '',
 			}).success(res => {
-				console.log('列表',res);
+				// console.log('列表',res);
 				var json = res.data;
 				for(var i=0;i<json.length;i++){
-					$(".Sort-Sort").append('<li onclick="Sorts(this)" value="'+json[i].id+'">'+json[i].name+'</li>')
+					$(".Sort_class").append('<li onclick="Sorts(this)" value="'+json[i].id+'">'+json[i].name+'</li>')
+				}
+			}).error(err => {
+				console.log(err);
+			})
+		}
+		var recommend;
+		var type;
+		var order;
+		var limit = 20;
+		var page = 1;
+		let inforApi = () => {
+			createAjax({
+				type: 'GET',
+				dataType: 'JSON',
+				url: inforList,
+				data: {
+					recommend,//推荐
+					order,//排序
+					page,//分页
+					type,//分类
+					limit,//条数
+				},
+			}).success(res => {
+				console.log('列表',res);
+				var json = res.data.data;
+				$(".infor_cont_word").empty();
+				for(var i=0;i<json.length;i++){
+					$(".infor_cont_word").append('<dl class="inforClick" data-id="'+json[i].id+'"><dt><img src="'+json[i].images+'"></dt><dd class="infor_world_title">'+json[i].name+'</dd><dd class="infor_world_sourse">雅虎</dd><dd class="infor_world_time">'+json[i].created_time+'<span class="star"><i class="infor_ul_icon_star">'+json[i].recommend_num+'</i></span></dd></dl>')
 				}
 			}).error(err => {
 				console.log(err);
 			})
 		}
 		//Sort开始
-		
 		$(document).ready(function(){
 		    $(".Sort").click(function(){
 		        if ($('.Sort-eject').hasClass('grade-w-roll')) {
@@ -91,11 +135,21 @@
 		});
 		//判断页面是否有弹出
 		$(document).ready(function(){
-		    $(".Sort").click(function(){
-		        if ($('.grade-eject').hasClass('grade-w-roll')){
+		    $(".Sort1").click(function(){
+		        if ($('.grade-eject').hasClass('grade-w-roll')) {
 		            $('.grade-eject').removeClass('grade-w-roll');
-		        };
-		
+		        } else {
+		            $('.grade-eject').addClass('grade-w-roll');
+		        }
+		    });
+		});
+		$(document).ready(function(){
+		    $(".Category").click(function(){
+		        if ($('.Category-eject').hasClass('grade-w-roll')) {
+		            $('.Category-eject').removeClass('grade-w-roll');
+		        } else {
+		            $('.Category-eject').addClass('grade-w-roll');
+		        }
 		    });
 		});
 		//js点击事件监听开始
@@ -108,9 +162,46 @@
 			
 		    sbj.style.borderBottom = "solid 1px #ff7c08";
 			console.log(sbj.value);
+			// 分类
+			type = sbj.value
 			if(sbj.value){
 				$('.Sort-eject').removeClass('grade-w-roll');
+				inforApi();
 			}
 		}
+		function grade(sbj){
+		    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
+		    for (var i = 0; i < arr.length; i++){
+		        var a = arr[i];
+		        a.style.borderBottom = "";
+		    };
+		    sbj.style.borderBottom = "solid 1px #ff7c08";
+			console.log(sbj.value);
+			// 排序
+			order = sbj.value
+			if(sbj.value){
+				$('.grade-eject').removeClass('grade-w-roll');
+				inforApi();
+			}
+		}
+		function Categorytw(sbj){
+		    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
+		    for (var i = 0; i < arr.length; i++){
+		        var a = arr[i];
+		        a.style.borderBottom = "";
+		    };
+		    sbj.style.borderBottom = "solid 1px #ff7c08";
+			console.log(sbj.value);
+			// 推荐指数
+			recommend = sbj.value
+			if(sbj.value){
+				$('.Category-eject').removeClass('grade-w-roll');
+				inforApi();
+			}
+		}
+		$(document).on('click',".inforClick",function(){
+			var real_id = $("data-id").val
+			window.location.href='infor_detail.html?real_id='+real_id;
+		})
 	</script>
 </html>
