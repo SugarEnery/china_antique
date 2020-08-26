@@ -642,4 +642,62 @@ input.file-style{
 	font-size: .32rem;
 	margin-top: .3rem;
 }
+/* 拍卖列表 */
+.action_class_title{
+	padding:.2rem;
+	
+}
+.auciton_class_ul{
+	background-color: #F5F5F5;
+	overflow: hidden;
+	font-size: .28rem;
+}
+.auciton_class_ul li{
+	width: 30%;
+	float: left;
+	background-color: #FFFFFF;
+	text-align: center;
+	padding:.2rem 0;
+	height: .7rem;
+	margin: .2rem .1rem;
+}
+.action_list_content{
+	
+}
+.action_list_content dl{
+	width: 45%;
+	float: left;
+	margin-right: .2rem;
+	
+}
+.action_list_content dl img{
+	width: 100%;
+}
+.action_centen_name{
+	padding:.2rem 0;
+	font-size: .28rem;
+}
+.action_centen_money{
+	font-size: .24rem;
+}
+.action_centen_num{
+	font-size: .24rem;
+	float: right;
+	color: #FF0000;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

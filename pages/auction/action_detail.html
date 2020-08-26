@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="../../css/publicStyle.css" rel="stylesheet" />
+		<link href="../../css/china_antique.css" rel="stylesheet" />
+		<link href="../../css/iconfont.css" rel="stylesheet" />
+		<link href="../../css/demo.css" rel="stylesheet" />
+		<link href="../../css/swiper.min.css" rel="stylesheet" />
+		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
+		<script src="../../js/rem.js" type="text/javascript"></script>
+		<script src="../../js/swiper.min.js" type="text/javascript"></script>
+		<script src="../../js/config.js"></script>
+		<title>拍卖详情</title>
+	</head>
+	<body>
+		<div class="auction_detail">
+			<!-- banner -->
+			<div class="index_div">
+				<!-- Swiper -->
+				<div class="swiper-container">
+					<div class="swiper-wrapper banner_list">
+					  <div class="swiper-slide"><img src="../../img/banner01.png"></div>
+					  <div class="swiper-slide"><img src="../../img/banner02.png"></div>
+					  <div class="swiper-slide"><img src="../../img/banner03.png"></div>
+					</div>
+					<!-- Add Pagination -->
+					<div class="swiper-pagination"></div>
+				</div>
+				<!-- Swiper JS -->
+				<script src="../../js/swiper.min.js" type="text/javascript"></script>
+				<!-- Initialize Swiper -->
+				<script>
+				var swiper = new Swiper('.swiper-container', {
+				  pagination: {
+					el: '.swiper-pagination',
+				  },
+				});
+				</script>
+			</div>
+			<div class="infor_content">
+				<p class="infor_title">资讯详情明清瓷器标题</p>
+				<p class="infor_mess">
+					<span class="infor_time">结束时间：2020-07-09 13:00:00</span>
+					 <span class="infor_seedetail">查看详情</span>
+				</p>
+			
+				<h1 class="center_img"><img src="../../img/banner01.png"></h1>
+				<p class="infor_uptitle">拍品展示</p>
+				<div class="infor_updetail">
+					<p>详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器</p>
+				</div>
+			</div>
+			<footer class="infor_footer">
+				<span class="colect_btn">收藏</span>
+				<span class="assess_btns">鉴定评估</span>
+			</footer>
+		</div>
+	</body>
+	<script>
+		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
+		const autionDetail = _Config_.API_PATH + '/api/getAuctionDetail'//详情
+		function GetUrlParam(paraName) {
+			var url = document.location.toString();
+			var arrObj = url.split("?");
+			if (arrObj.length > 1) {
+				var arrPara = arrObj[1].split("&");
+				var arr;
+				for (var i = 0; i < arrPara.length; i++) {
+					arr = arrPara[i].split("=");
+		 
+					if (arr != null && arr[0] == paraName) {
+						return arr[1];
+					}
+				}
+				return "";
+			}
+			else {
+				return "";
+			}
+		}
+		var auction_id = GetUrlParam("auction_id") //获取当前链接指定字段
+		user_id
+		$(document).ready(function () {
+			auciondetailApi()
+		})
+		// 资讯详情
+		let auciondetailApi = () => {
+			createAjax({
+				type: 'GET',
+				dataType: 'JSON',
+				url: autionDetail,
+				data: {	
+					auction_id:auction_id,
+				}
+			}).success(res => {
+				console.log(res);
+				if(res.data.length<0){
+					for(var i=0;i<res.data.length;i++){
+						$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data[i].image+'"></div>');
+					}	
+				}else{
+					console.log("banner暂未更新！")
+				}	
+			}).error(err => {
+				console.log(err);
+			})
+		}
+	</script>
+</html>
