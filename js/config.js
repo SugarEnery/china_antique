@@ -12,8 +12,8 @@ console.log(user_id) ;
 function createAjax(ajaxrequire) {
 	// console.log(ajaxrequire)
  	_url = ajaxrequire.url;
- 	// _dataType = ajaxrequire._dataType;
- 	// _async = ajaxrequire._async;
+ 	_dataType = ajaxrequire._dataType;
+ 	_async = ajaxrequire._async;
  	_method = ajaxrequire.type;//请求
  	_data = ajaxrequire.data;
  	// _data.token = token;
@@ -23,7 +23,7 @@ function createAjax(ajaxrequire) {
         url: _url,
         dataType: 'JSON',
         cache: false,
-        // async: _async,
+        async: _async,
         type: _method,
         data: _data,
         timeout:10000,

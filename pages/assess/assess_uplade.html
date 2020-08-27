@@ -7,38 +7,45 @@
 		<link href="../../css/china_antique.css" rel="stylesheet" />
 		<link href="../../css/iconfont.css" rel="stylesheet" />
 		<link href="../../css/swiper.min.css" rel="stylesheet" />
-		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
+		<script src="../../js/jquery-2.1.1.min.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
 		<script src="../../js/config.js"></script>
+		
+		<link rel="stylesheet" href="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/index.css">
+		    <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+		    <script src="https://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js"></script>
+		    <script src="http://cdn.suoluomei.com/common/js2.0/axios/axios.min.js"></script>
+		    <script src="https://cdn.suoluomei.com/common/js2.0/vue/v2.5.16/vue.js"></script>
+		    <script src="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/vant.min.js"></script>
 		<title>鉴定评估</title>
 	</head>
 	<body>
 		<h1 class="assess_banner"><img src="../../img/banner02.png"></h1>
 		<div class="idcard">
-			<form method="post" enctype="multipart/form-data" action="idcard_confirm.html" id="alive_form">
-				<input type="hidden" id="tel_idcard" name="tel" value="">
-				<input type="hidden" name="shzqt_url" value="/upload/uploadIDCardImage">
-				<input type="hidden" name="service" value="upload_idcard">
-				<input type="hidden" name="app" value="h5">
+			<!-- <form method="post" enctype="multipart/form-data" action="idcard_confirm.html" id="alive_form"> -->
+				<!-- <input type="hidden" id="tel_idcard" name="tel" value=""> -->
+				<!-- <input type="hidden" name="shzqt_url" value="/upload/uploadIDCardImage"> -->
+				<!-- <input type="hidden" name="service" value="upload_idcard"> -->
+				<!-- <input type="hidden" name="app" value="h5"> -->
 				<div class="idcard_img_background">
 					<img src="../../img/id_people.png" class="idcard_img" id="idcard_i1">
 					<p class="p1"><img src="../../img/id_camera.png" width="60%"><input type="file" id="idcard_front" accept="image/*" onchange="imgPreview(this)" class="file-style" name="zheng"></p>
 					<p class="p2">点击上传eBay或雅虎图片</p>
 				</div>
-				<!-- <button type="submit" class="alive_btn" onclick="window.location.href='idcard_confirm.html'">上传</button> -->
+				<button type="submit" class="alive_btn" onclick="window.location.href='idcard_confirm.html'">上传</button>
 			<!-- </div> -->
-			</form>
+			<!-- </form> -->
 		</div>
 		<div class="assess_content">
 			<label>
-				<span>拍品链接：</span><input type="text" placeholder="ebody雅虎链接或ID">	
+				<span>拍品链接：</span><input type="text" placeholder="ebody雅虎链接或ID" class="ass_url">	
 			</label>
 			<label>
-				<span>需求描述：</span><input type="text" placeholder="ebody雅虎链接或ID">	
+				<span>需求描述：</span><input type="text" placeholder="ebody雅虎链接或ID" class="ass_cont">	
 			</label>
 			<label>
-				<span>拍品级别：</span><input type="text" placeholder="ebody雅虎链接或ID">	
+				<span>拍品级别：</span><input type="text" placeholder="ebody雅虎链接或ID" class="ass_cla">	
 			</label>
 		</div>
 		<input type="button" value="进行评估"  class="assess_btn" onclick="assessFun"/>
@@ -54,15 +61,21 @@
 	    $("#tel_idcard").val(loginPhone);
 	    function imgPreview(fileDom){
 	        var id = $(fileDom).attr('id');
+			var imgurl;
+	        if(id == 'idcard_front'){
+	            id = 'idcard_i1';
+	        }else{
+	            id = 'idcard_i2';
+	        }
 	        //判断是否支持FileReader
 	        if (window.FileReader) {
 	            var reader = new FileReader();
 	        } else {
 	            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
 	        }
+	        
 	        //获取文件
 	        var file = fileDom.files[0];
-			
 	        var imageType = /^image\//;
 	        //是否是图片
 	        if (!imageType.test(file.type)) {
@@ -76,27 +89,30 @@
 	            $("#"+id).addClass('idcard_img1');
 	            $("#"+id).parent().find('p').hide();
 	            var img = document.getElementById(id);
-				// console.log(e)
 	            //图片路径设置为读取的图片
-				// console.log(img.src)
+	            img.src = e.target.result;
 	        };
 	        reader.readAsDataURL(file);
-			console.log(file)
-			formData = new FormData();
-			formData.append(file[0].name, file[0]);
-			createAjax({
-				type: 'POST',
-				dataType: 'JSON',
-				url: imageUpload,
-				data: {	
-					file,
-				},
-			}).success(res => {
-				console.log(res);
-				
-			}).error(err => {
-				console.log(err);
-			})
+			console.log(file);
+			var formData = new FormData(); 
+			formData.append('file', $('#idcard_front')[0].files[0]); //添加图片信息的参数
+			// formData.append('sizeid',123); //添加其他参数
+			$.ajax({          
+				url:imageUpload, 
+				dataType:"json",  
+				type:"POST", 
+				data:formData,
+				processData:false,
+				contentType: false, 
+				mimeType:"multipart/form-data",
+				success:function(data){
+					console.log(data);
+					imgurl = data.data.filePath;
+				},      
+				error:function(err){
+					console.log(err)
+				}
+			});
 	    }
 		function assessFun(){
 			createAjax({
