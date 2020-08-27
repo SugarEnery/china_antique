@@ -136,9 +136,12 @@ html, body {
 .expert_introduce{
 	margin-top: .3rem;
 }
-
-
-
+.expert_ul li{
+	float: left;
+	width: 33%;
+	text-align: center;
+	margin:.3rem 0;
+}
 /* 资讯列表 */
 .infor_div{
 	overflow: hidden;
@@ -548,29 +551,28 @@ i.logistics_copy {
 .idcard{
 	position: relative;
 	margin:0 auto;
-	font-size: 16px;
+	/* font-size: 16px; */
 	padding: 20px 10px;
    
 }
 .idcard p{
-	font-size: 16px;
+	/* font-size: 16px; */
 	font-family: '微软雅黑', 'Lucida sans', Arial;
 }
 .idcard_img_background{
 	position: relative;
 	width:95%;
-	height: 200px;
+	height: 220px;
 	text-align: center;
 	border-radius: 5px;
-	margin:20px auto;
-	
+	margin: auto;
 }
 .idcard_img_background p{
 	position: absolute;
 	
 }
 .idcard_img_background p:last-child{
-	font-size:16px;
+	/* font-size:16px; */
 }
 .p1{
 	left:50%;
@@ -586,12 +588,12 @@ i.logistics_copy {
 	transform: translate(-50%, -50%);
 	top:150px;
 	cursor: pointer;
-	color:#000;
-	font-size:18px;
+	color:#323232;
+	font-size: .28rem;
 }
 .idcard_img{
-	width: 90%;
-	height: 200px;
+	width: 100%;
+	height: 220px;
 	opacity: 0.6;
 	margin: auto;
 }

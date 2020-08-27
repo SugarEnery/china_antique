@@ -200,7 +200,7 @@
 			}
 		}
 		$(document).on('click',".inforClick",function(){
-			var real_id = $("data-id").val
+			var real_id = $(this).attr("data-id");
 			console.log(real_id)
 			window.location.href='infor_detail.html?real_id='+real_id;
 		})

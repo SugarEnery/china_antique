@@ -10,6 +10,7 @@
 		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
+		<script src="../../js/config.js"></script>
 		<title>鉴定评估</title>
 	</head>
 	<body>
@@ -40,28 +41,28 @@
 				<span>拍品级别：</span><input type="text" placeholder="ebody雅虎链接或ID">	
 			</label>
 		</div>
-		<input type="button" value="进行评估"  class="assess_btn"/>
+		<input type="button" value="进行评估"  class="assess_btn" onclick="assessFun"/>
 	</body>
 	
 	<script>
+		const assessUploade = _Config_.API_PATH + '/api/assessPlatform'//详情
+		const imageUpload = _Config_.API_PATH + '/homeApi/upload' //上传图片
+		// $(document).ready(function () {
+		// 	auciondetailApi()
+		// })
 	    var loginPhone = localStorage.getItem('loginPhone_flow');
 	    $("#tel_idcard").val(loginPhone);
 	    function imgPreview(fileDom){
 	        var id = $(fileDom).attr('id');
-	        if(id == 'idcard_front'){
-	            id = 'idcard_i1';
-	        }else{
-	            id = 'idcard_i2';
-	        }
 	        //判断是否支持FileReader
 	        if (window.FileReader) {
 	            var reader = new FileReader();
 	        } else {
 	            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
 	        }
-	
 	        //获取文件
 	        var file = fileDom.files[0];
+			
 	        var imageType = /^image\//;
 	        //是否是图片
 	        if (!imageType.test(file.type)) {
@@ -75,11 +76,53 @@
 	            $("#"+id).addClass('idcard_img1');
 	            $("#"+id).parent().find('p').hide();
 	            var img = document.getElementById(id);
+				// console.log(e)
 	            //图片路径设置为读取的图片
-	            img.src = e.target.result;
+				// console.log(img.src)
 	        };
 	        reader.readAsDataURL(file);
+			console.log(file)
+			formData = new FormData();
+			formData.append(file[0].name, file[0]);
+			createAjax({
+				type: 'POST',
+				dataType: 'JSON',
+				url: imageUpload,
+				data: {	
+					file,
+				},
+			}).success(res => {
+				console.log(res);
+				
+			}).error(err => {
+				console.log(err);
+			})
 	    }
+		function assessFun(){
+			createAjax({
+				type: 'GET',
+				dataType: 'JSON',
+				url: assessUploade,
+				data: {	
+					image,
+					user_id,
+					url,
+					appraisal_need,
+					
+				}
+			}).success(res => {
+				console.log(res);
+				if(res.data.length<0){
+					for(var i=0;i<res.data.length;i++){
+						$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data[i].image+'"></div>');
+					}	
+				}else{
+					console.log("banner暂未更新！")
+				}	
+			}).error(err => {
+				console.log(err);
+			})
+		}
 	 </script>
 </html>
  
