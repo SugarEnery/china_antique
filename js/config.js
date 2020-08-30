@@ -5,7 +5,12 @@ var _Config_ = {
 // 线上地址
 var Router= "http://api.chinabogu.com";
 var user_id =localStorage.getItem("user_id");
-console.log(user_id) ;
+var nickname = localStorage.getItem('nickname');
+var headimgurl = localStorage.getItem('headimgurl');
+
+console.log(nickname);
+console.log(headimgurl)
+console.log(user_id);
 // 本地地址
 // var Router = "http://192.168.23.123:8000/";
 //ajax

@@ -53,7 +53,7 @@ div.screening>ul>li{
 }
 .grade-eject>ul>li,.Category-eject>ul>li,.Sort-eject>ul>li{
     line-height: .8rem;
-    font-size: 0.12rem;
+    font-size: .24rem;
     padding-left: 1rem;
     border-bottom: solid 1px #eee;
 }
