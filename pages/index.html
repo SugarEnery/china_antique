@@ -223,10 +223,14 @@
 							dataType: 'JSON',
 							url: inforisly,
 							data: {
-								type:type,
+								type,
+								// page,
+								// limit,
+								// recommend,
+								// order
 							},
 						}).success(res => {
-							// console.log('资讯列表',res);
+							console.log('资讯列表',res);
 							var json = res.data.data;
 							$(".inforify_list").empty();
 							var html='';
@@ -239,7 +243,6 @@
 								}
 								// console.log(html)
 								html += '</ul></span></dd><dd class="expert_introduce">'+json[i].created_time+'</dd><dd class="expert_introduce">'+json[i].source_name+'</dd></dl></div>';
-								
 								$(".inforify_list").append(html);
 									
 								
