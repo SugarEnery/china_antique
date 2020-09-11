@@ -21,19 +21,30 @@ function createAjax(ajaxrequire) {
  	_async = ajaxrequire._async;
  	_method = ajaxrequire.type;//请求
  	_data = ajaxrequire.data;
+	_headers = ajaxrequire.headers;
  	// _data.token = token;
  	// _data.device = 'weixin';
 
     return $.ajax({
-        url: _url,
-        dataType: 'JSON',
-        cache: false,
-        async: _async,
-        type: _method,
-        data: _data,
-        timeout:10000,
+		url: _url,
+		dataType: 'JSON',
+		type: _method,
+		cache: false,
+		async: _async,
+		data: _data,
+		timeout:10000,
+		// beforeSend: function (xhr) {
+		// 	console.log('正在登录中...');
+		// 	// xhr.setRequestHeader("Access-Control-Allow-Origin", "http://api.chinabogu.com");
+		// 	xhr.setRequestHeader('uid',5);
+		// 	xhr.setRequestHeader('Access-Control-Allow-Credentials:true');
+		// 	// xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+		// 	// xhr.withCredentials = true;
+		    
+			
+		// },
 		success:function(data){
-			// console.log(data);
+			console.log(data);
 		},
         error:function(err){
 			console.log(err)
