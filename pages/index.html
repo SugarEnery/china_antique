@@ -150,9 +150,9 @@
 			mounted(){
 				// this.onSearch();
 				this.loginInApi();
-				// this.bannerApi();
-				// this.centerApi();
-				// this.inforApi();
+				this.bannerApi();
+				this.centerApi();
+				this.inforApi();
 			},
 		    methods:{
 				onSearch(){
@@ -167,8 +167,7 @@
 					    var strUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appID + "&redirect_uri=" + redirectUri + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
 					    return strUrl;
 					}
-				console.log(getUrl())
-				
+				// console.log(getUrl())
 				function urlResolve () {
 					var url = location.search; //获取url中"?"符后的字符串
 					var theRequest = new Object();    //声明一个对象
@@ -183,6 +182,7 @@
 				}
 				console.log(urlResolve());
 				var code = urlResolve().code;
+				console.log(code)
 				if(code == undefined ){
 					window.location = getUrl();
 				}else{
@@ -195,12 +195,14 @@
 						}
 					}).success(res => {
 						console.log(res);
-						if(res.msg == "40163" || res.msg == "40029"){
+						if(res.code == 40163 || res.code == 40029){
 						    window.location = getUrl();
+						}else{
+							localStorage.setItem("nickname", res.data.nickname);
+							localStorage.setItem("headimgurl", res.data.headimgurl)
+							localStorage.setItem("user_id", res.data.id);
 						}
-						localStorage.setItem("nickname", res.data.nickname);
-						localStorage.setItem("headimgurl", res.data.headimgurl)
-						localStorage.setItem("user_id", res.data.id);
+						
 					}).error(err => {
 						console.log(err);
 					})
@@ -208,8 +210,7 @@
 					
 					
 				},
-				bannerApi(){
-					
+				bannerApi(){				
 					createAjax({
 						type: 'GET',
 						dataType: 'JSON',

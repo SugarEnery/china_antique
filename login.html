@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>神州博古网</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+		<link href="../css/publicStyle.css" rel="stylesheet" />
+		<link href="../css/iconfont.css" rel="stylesheet" />
+		<link href="../css/china_antique.css" rel="stylesheet" />
+		<link href="../css/swiper.min.css" rel="stylesheet" />
+		<script src="../js/jquery-1.11.3.js" type="text/javascript"></script>
+		
+		<script src="../js/rem.js" type="text/javascript"></script>
+		<script src="../js/config.js"></script>
+		<link rel="stylesheet" href="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/index.css">
+		    <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+		    <script src="https://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js"></script>
+		    <script src="http://cdn.suoluomei.com/common/js2.0/axios/axios.min.js"></script>
+		    <script src="https://cdn.suoluomei.com/common/js2.0/vue/v2.5.16/vue.js"></script>
+		    <script src="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/vant.min.js"></script>
+			<!-- <script>Vue.config.productionTip = false</script> -->
+			<script src="../js/vconsole.min.js"></script>
+			<!-- 页面调试 -->
+			<script>
+			    // var vConsole = new VConsole();// 初始化
+			</script>
+	</head>
+	<body>
+		
+	</body>
+	<script type="text/javascript">
+		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
+		const callback = _Config_.API_PATH + '/api/callback'//回调
+		new Vue({
+		    el:"#indextabbar",
+		    data:{
+		        active: 'home',
+		    },
+			mounted(){
+				this.loginInApi();
+			},
+		    methods:{
+				loginInApi(){
+					var url = window.location.href;//获取整个url
+					// var redirect_url = encodeURIComponent(url);
+					var redirectUri = encodeURIComponent(url);
+					var appID = "wx2c354309cf103d50";
+					function getUrl(){
+					    var strUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appID + "&redirect_uri=" + redirectUri + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
+					    return strUrl;
+					}
+				// console.log(getUrl())
+				function urlResolve () {
+					var url = location.search; //获取url中"?"符后的字符串
+					var theRequest = new Object();    //声明一个对象
+					if(url.indexOf("?") != -1) {
+						var str = url.substr(1);
+						strs = str.split("&");
+						for(var i = 0; i < strs.length; i++) {
+							theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+						}
+					}
+					return theRequest;
+				}
+				console.log(urlResolve());
+				var code = urlResolve().code;
+				console.log(code)
+				if(code == undefined ){
+					window.location = getUrl();
+				}else{
+					createAjax({
+						type: 'GET',
+						url: callback,
+						dataType: 'JSON',
+						data: {
+							code,
+						}
+					}).success(res => {
+						console.log(res);
+						if(res.code == 40163 || res.code == 40029){
+						    window.location = getUrl();
+						}else{
+							localStorage.setItem("nickname", res.data.nickname);
+							localStorage.setItem("headimgurl", res.data.headimgurl)
+							localStorage.setItem("user_id", res.data.id);
+							window.location.href="pages/index.html";
+						}
+						
+					}).error(err => {
+						console.log(err);
+					})
+				}
+					
+					
+				},
+				
+		    },
+		})	
+	</script>
+</html>

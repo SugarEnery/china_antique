@@ -8,14 +8,14 @@ var user_id =localStorage.getItem("user_id");
 var nickname = localStorage.getItem('nickname');
 var headimgurl = localStorage.getItem('headimgurl');
 
-console.log(nickname);
-console.log(headimgurl)
-console.log(user_id);
+// console.log(nickname);
+// console.log(headimgurl)
+// console.log(user_id);
 // 本地地址
 // var Router = "http://192.168.23.123:8000/";
 //ajax
 function createAjax(ajaxrequire) {
-	// console.log(ajaxrequire)
+	console.log(ajaxrequire)
  	_url = ajaxrequire.url;
  	_dataType = ajaxrequire._dataType;
  	_async = ajaxrequire._async;
