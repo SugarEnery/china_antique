@@ -12,6 +12,26 @@ html, body {
 	position: relative;
 	min-height: 100%;
 }
+/* loading页面 */
+#loading {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 999;
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+}
+.loadingimg {
+	position: fixed;
+	z-index: 9999;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 30px;
+	height: 30px;
+}
+
 .index_div{
 	/* border:#000 solid 1px; */
 	overflow: hidden;
@@ -21,7 +41,7 @@ html, body {
 	height: 100%;
 }
 
-.swiper-slide {
+.index_div .swiper-slide {
 	/* text-align: center; */
 	font-size: .28rem;
 	background: #fff;
@@ -39,7 +59,7 @@ html, body {
 	-webkit-align-items: center;
 	align-items: center;
 }
-.swiper-slide img{
+.index_div .swiper-slide img{
 	width: 100%;
 }
 .index_container{
@@ -115,7 +135,9 @@ html, body {
 }
 .index_classify_content{
 	width: 100%;
+	margin: auto;
 	overflow: hidden;
+	
 }
 .index_classify_content dl{
 	width: 100%;
@@ -124,7 +146,7 @@ html, body {
 }
 .index_classify_content dl dt{
 	float: left;
-	width: 35%;
+	width: 30%;
 }
 .index_classify_content dl dt img{
 	width: 100%;
@@ -132,12 +154,13 @@ html, body {
 }
 .index_classify_content dl dd{
 	float: left;
-	width: 60%;
+	width: 69%;
 	color: #666666;
 	padding-left: .2rem;
+	margin-top: .3rem;
 }
 .inclassify_title{
-	margin-top: .5rem;
+	margin-top: .2rem;
 	position: relative;
 }
 .inclassify_time{
@@ -145,13 +168,27 @@ html, body {
 }
 
 /* 专家列表 */
+.expert_list{
+	margin: 0 .2rem;
+}
 .expert_introduce{
 	margin-top: .3rem;
+	line-height: .4rem;
+	word-break:break-all;
+	display:-webkit-box;
+	-webkit-line-clamp:2;
+	-webkit-box-orient:vertical;
+	overflow:hidden;
+	font-size: .28rem;
+}
+.expert_content{
+	margin-top: .2rem;
+	line-height: .4rem;
 }
 .expert_ul li{
 	float: left;
 	width: 33%;
-	text-align: center;
+	/* text-align: center; */
 	margin:.3rem 0;
 }
 /* 资讯列表 */
@@ -222,6 +259,11 @@ html, body {
 	/* border: 1px solid #ccc; */
 	overflow: hidden;
 }
+/* .expertify_list{
+	width: 95%;
+	margin: auto;
+	overflow:hidden;
+} */
 .swiper1 {
 	width: 100%;
 }
@@ -259,6 +301,7 @@ html, body {
 	box-sizing: border-box !important;
 	overflow-x: hidden !important;
 }
+
 /* 资讯详情 */
 .infor_content{
 	width: 95%;
@@ -321,6 +364,7 @@ html, body {
 	display: block;
 	float: left;
 	margin-left: .1rem;
+	cursor: pointer;
 	
 }
 .assess_btns{
@@ -334,6 +378,7 @@ html, body {
 	text-align: center;
 	border-radius: .1rem;
 	margin-right: .1rem;
+	
 }
 /* 收藏 */
 .colle_div{
@@ -559,12 +604,12 @@ i.logistics_copy {
 	width: 100%;
 }
 .auction_updetail dl dt{
-	width: 23%;
+	width: 15%;
 	float: left;
 }
 .auction_updetail dl dd{
 	float: left;
-	width: 75%;
+	width: 80%;
 }
 .actionup_title{
 	padding-left: .3rem;
@@ -576,8 +621,14 @@ i.logistics_copy {
 .actionup_money{
 	padding:.2rem 0;
 	padding-left: .2rem;
-	color: #323232;
+	/* color: #323232; */
 	font-size: .28rem;
+}
+.all_colorred{
+	color: #FF0000;
+}
+.all_colorgray{
+	color: #323232;
 }
 .actionup_state {
 	float: right;
@@ -587,6 +638,10 @@ i.logistics_copy {
 .colorred {
 	color: #FF0000;
 	border:#FF0000 solid 1px;
+}
+.colorgray{
+	color: #666666;
+	border:#666666 solid 1px;
 }
 .actionup_time {
 	float: right;
@@ -714,6 +769,10 @@ i.logistics_copy {
 	color: #FFFFFF;
 	font-size: .32rem;
 	margin-top: .3rem;
+	position: fixed;
+	bottom:0;
+	left: 0;
+	right: 0;
 }
 
 /* 上传图片样式 鉴定*/
@@ -1031,12 +1090,67 @@ p.feedback_div_title{
 	cursor:pointer;
 }/*五角星样式*/
 li.hs,.cs{color:#f00;}/*五角星点击后样式*/
-
-
-
-
-
-
-
+/* 会员权益 */
+.member_header{
+	background-color: #242528;
+	overflow: hidden;
+	padding:.3rem 0;
+}
+.menber_infor{
+	overflow: hidden;
+	width: 80%;
+	margin-left: .3rem;
+}
+.menber_infor dt{
+	float: left;
+	width: 20%;
+}
+.menber_infor dt img{
+	width: 100%;
+	border-radius: 50%;
+}
+.menber_infor dd{
+	float: left;
+	width: 60%;
+}
+.menber_name{
+	font-size: .28rem;
+	color: #ffda04;
+	padding: .2rem .1rem;
+}
+.menber_state{
+	font-size: .24rem;
+	color: #666666;
+	padding-left: .1rem;
+}
+.member_introduce{
+	background-color: #F4CE89;
+	border-radius: .2rem;
+	padding:.3rem .3rem;
+	width: 85%;
+	margin-left: .3rem;
+	margin-top: .2rem;
+}
+.member_title{
+	font-size: .28rem;
+}
+.member_title span{
+	float: right;
+	font-size: .24rem;
+}
+.member_cont{
+	font-size: .24rem;
+	margin-top: .3rem;
+	line-height: .5rem;
+}
+.member_cont input{
+	background-color: #101010;
+	float: right;
+	color: #FFFFFF;
+	padding:0rem .3rem;
+	border-radius: .5rem;
+	line-height: .5rem;
+	
+}
 
 

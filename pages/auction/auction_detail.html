@@ -7,22 +7,23 @@
 		<link href="../../css/iconfont.css" rel="stylesheet" />
 		<link href="../../css/demo.css" rel="stylesheet" />
 		<link href="../../css/swiper.min.css" rel="stylesheet" />
+		<link href="../../css/layer.css" rel="stylesheet" />
 		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
 		<script src="../../js/config.js"></script>
+		<script src="../../js/layer.js"></script>
+		<!-- 生产环境版本，优化了尺寸和速度 -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<title>拍卖详情</title>
 	</head>
 	<body>
-		<div class="auction_detail">
+		<div class="auction_detail" id="auction_divv">
 			<!-- banner -->
 			<div class="index_div">
 				<!-- Swiper -->
 				<div class="swiper-container">
 					<div class="swiper-wrapper banner_list">
-					  <!-- <div class="swiper-slide"><img src="../../img/banner01.png"></div>
-					  <div class="swiper-slide"><img src="../../img/banner02.png"></div>
-					  <div class="swiper-slide"><img src="../../img/banner03.png"></div> -->
 					</div>
 					<!-- Add Pagination -->
 					<div class="swiper-pagination"></div>
@@ -40,54 +41,53 @@
 			</div>
 			<div class="infor_content">
 				<div class="auctiond_info">
-					<span class="auctiond_title">资讯详情明清瓷器标题</span>
-					<span class="auctiond_state">正在进行</span>
+					<span class="auctiond_title">{{details.name}}</span>
+					<span class="auctiond_state">{{details.msg}}</span>
 				</div>
 				<div class="auctiond_cont">
 					<span class="auctiond_money">
 						<i class="auctiond_money_top">RM<br/>当前价</i>
-						<i class="auctiond_money_mon">1200</i>
+						<i class="auctiond_money_mon">{{details.now_price}}</i>
 					</span>
-					<span class="auction_time">11111</span>
+					<span class="auction_time">{{details.end_time}}</span>
 				</div>
 				<h1 class="center_img"><img src="../../img/banner01.png"></h1>
 				<p class="infor_uptitle">出价记录</p>
 				<div class="auction_updetail">
-					<dl>
-						<dt><img src="../../img/111.jpg"></dt>
+					<dl  v-for="(item, index) in infoLIst" :key="item.id">
+						<dt><img :src="item.headimgurl"></dt>
 						<dd class="actionup_title">
-							<span class="actionup_name">姓名是</span>
-							<span class="actionup_state colorred">领先</span>
+							<span class="actionup_name">{{item.name}}</span>
+							<span class="actionup_state colorred" v-if="index == 0">	
+								领先
+							</span>
+							<span class="actionup_state colorgray" v-if="index != 0">
+								出局
+							</span>
 						</dd>
 						<dd class="actionup_money">
-							<span class="actionup_money">1000</span>
-							<span class="actionup_time">shij</span>
-						</dd>
-					</dl>
-					<dl>
-						<dt><img src="../../img/111.jpg"></dt>
-						<dd class="actionup_title">
-							<span class="actionup_name">姓名是</span>
-							<span class="actionup_state colorred">领先</span>
-						</dd>
-						<dd class="actionup_money">
-							<span class="actionup_money">1000</span>
-							<span class="actionup_time">shij</span>
+							<span class="actionup_money all_colorgray">
+								{{item.end_price}}
+							</span>
+							<!-- <span class="actionup_money all_colorred" v-if="index == 0">
+								{{item.end_price}}
+							</span>
+							<span class="actionup_money all_colorgray" v-else="">
+								{{item.end_price}}
+							</span> -->
+							<span class="actionup_time">{{item.created_time}}</span>
 						</dd>
 					</dl>
 				</div>
 			</div>
-			<input type="button" value="立即出价"  class="assess_btn" onclick="auctionFun()"/>
-			<!-- <footer class="infor_footer">
-				<span class="colect_btn">收藏</span>
-				<span class="assess_btns">鉴定评估</span>
-			</footer> -->
+			<input type="button" value="立即出价"  class="assess_btn" @click="auctionFun ()"/>
 		</div>
 	</body>
 	<script>
 		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
 		const autionDetail = _Config_.API_PATH + '/api/getAuctionDetail';//详情
-		const auctionjoin = _Config_.API_PATH + '/api/joinAuction';
+		const auctionjoin = _Config_.API_PATH + '/api/joinAuction';//参加拍卖
+		
 		function GetUrlParam(paraName) {
 			var url = document.location.toString();
 			var arrObj = url.split("?");
@@ -110,43 +110,85 @@
 		var auction_id = GetUrlParam("auction_id") //获取当前链接指定字段
 		console.log(auction_id)
 		var user_id = localStorage.getItem('user_id');
-		$(document).ready(function () {
-			auciondetailApi()
-		})
-		// 详情
-		let auciondetailApi = () => {
-			createAjax({
-				type: 'GET',
-				dataType: 'JSON',
-				url: autionDetail,
-				data: {
-					auction_id:auction_id,
+		var app = new Vue({
+			el: '#auction_divv',
+			data:function() {
+				return{
+					details:{},
+					infoLIst:[]
 				}
-			}).success(res => {
-				console.log(res);
-				$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data.image+'"></div>');
+			},
+			mounted(){
+				// this.auctionFun();
+				this.auciondetailApi();
 				
-			}).error(err => {
-				console.log(err);
-			})
-		}
-		function auctionFun(){
-			createAjax({
-				type: 'POST',
-				dataType: 'JSON',
-				url: auctionjoin,
-				data: {	
-					user_id:user_id,
-					auction_id:auction_id,
-				}
-			}).success(res => {
-				console.log(res);
-				if(res.cpde == "1"){
-					alert("上传成功！")
-				}
-			}).error(err => {
-				console.log(err);
-			})
-		}
+			},
+			methods:{
+				auciondetailApi (){
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: autionDetail,
+						data: {
+							auction_id:auction_id,
+						}
+					}).success(res => {
+						console.log(res);
+						this.details = res.data;
+						this.infoLIst = res.data.auction_order_list;
+						$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data.image+'"></div>');
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				// 缴纳保证金
+				auctionFun (){
+					createAjax({
+						type: 'POST',
+						dataType: 'JSON',
+						url: auctionjoin,
+						data: {	
+							user_id:user_id,
+							auction_id:auction_id,
+						}
+					}).success(res => {
+						console.log(res);
+						if(res.code == "1"){
+							// 调用支付按钮
+							WeixinJSBridge.invoke(
+							   'getBrandWCPayRequest', {
+									"appId":res.data.appId,     //公众号名称，由商户传入     
+									"timeStamp":res.data.timeStamp,         //时间戳，自1970年以来的秒数     
+									"nonceStr":res.data.nonceStr, //随机串     
+									"package":res.data.package,     
+									"signType":"MD5",         //微信签名方式：     
+									"paySign": res.data.paySign//微信签名 
+								},
+							    function(res){
+									console.log("微信支付返回值:");
+									console.log(res);
+									if (res.err_msg == "get_brand_wcpay_request:ok") {
+										// 使用以上方式判断前端返回,微信团队郑重提示：
+										//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+										alert("get_brand_wcpay_request:ok");
+									}
+									location.reload() 
+									// alert(res.err_msg);
+									// alert(res); // 显示是个 Object
+								}
+							); 
+						}else if(res.code == "-1"){
+							layer.msg(res.msg);
+							return false;
+						}
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				
+				
+			},
+		  
+		})
 	</script>
 </html>

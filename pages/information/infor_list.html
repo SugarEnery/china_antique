@@ -115,9 +115,18 @@
 			}).success(res => {
 				console.log('列表',res);
 				var json = res.data.data;
+				var html='';
+				var htmlul='';
 				$(".infor_cont_word").empty();
 				for(var i=0;i<json.length;i++){
-					$(".infor_cont_word").append('<dl class="inforClick" data-id="'+json[i].id+'"><dt><img src="'+json[i].images+'"></dt><dd class="infor_world_title">'+json[i].name+'</dd><dd class="infor_world_sourse">雅虎</dd><dd class="infor_world_time">'+json[i].created_time+'<span class="star"><i class="infor_ul_icon_star">'+json[i].recommend_num+'</i></span></dd></dl>')
+					html += '<div class="swiper-slide swiper-no-swiping"><div class="index_classify_content"><dl><dt><img src="'+json[i].images+'"></dt><dd class="inclassify_title">'+json[i].name+'<span class="recommend_num"><ul class="cleanfloat">';
+					// console.log(json[i].recommend_num)
+					for(j = 0;j<json[i].recommend_num;j++){
+						html += '<li class="hs">&#9733;</li>';
+					}
+					// console.log(html)
+					html += '</ul></span></dd><dd class="expert_introduce">'+json[i].created_time+'</dd><dd class="expert_introduce">'+json[i].source_name+'</dd></dl></div>';
+					$(".infor_cont_word").append(html);
 				}
 			}).error(err => {
 				console.log(err);

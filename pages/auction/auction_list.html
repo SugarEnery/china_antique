@@ -18,15 +18,11 @@
 		<div class="auction_list">
 			<p class="action_class_title">热门分类</p>
 			<ul  class="auciton_class_ul">
-				<!-- <li>明清瓷器</li> -->
 			</ul>
 		</div>
 		<div class="infor_div">
-			<!-- <h1 class="infor_banner"><img src="../../img/banner01.png"></h1> -->
 			<ul class="infor_ul">
 				<li class="Sort1">排序<i class="iconfont infor_ul_icon">&#xe65d;</i></li>
-				<!-- <li class="Sort">类别<i class="iconfont infor_ul_icon">&#xe65d;</i></li> -->
-				<!-- <li class="Category">推荐<i class="iconfont infor_ul_icon">&#xe65d;</i></li> -->
 			</ul>
 			<div class="grade-eject">
 			    <ul class="Sort-Sort" id="Sort-Sort">
@@ -34,11 +30,6 @@
 			        <li onclick="grade(this)" value="2">从晚到早</li>
 			    </ul>
 			</div>
-			<!-- <div class="Sort-eject Sort-height">
-			    <ul class="Sort-Sort Sort_class" id="Sort-Sort">
-					
-			    </ul>
-			</div> -->
 			<div class="Category-eject">
 			    <ul class="Sort-Sort" id="Sort-Sort">
 			        <li onclick="Categorytw(this)" value="1">从低到高</li>
@@ -74,7 +65,7 @@
 				url: inforclassList,
 				data: '',
 			}).success(res => {
-				// console.log('列表',res);
+				console.log('列表',res);
 				var json = res.data;
 				for(var i=0;i<json.length;i++){
 					$(".auciton_class_ul").append('<li onclick="Sorts(this)" value="'+json[i].id+'">'+json[i].name+'</li>')
@@ -94,8 +85,8 @@
 				url: auctionList,
 				data: {
 					order,//排序
-					page,//分页
 					type,//分类
+					page,//分页	
 					limit,//条数
 				},
 			}).success(res => {
@@ -103,7 +94,7 @@
 				var json = res.data.data;
 				$(".action_list_content").empty();
 				for(var i=0;i<json.length;i++){
-					$(".action_list_content").append('<dl class="actionClick" data-id="'+json[i].id+'"><dt><img src="'+json[i].image+'"></dt><dd class="action_centen_name">清明瓷器名称</dd><dd><span class="action_centen_money">¥'+json[i].starting_price+'</span><span class="action_centen_num">已出价2次</span></dd></dl>')
+					$(".action_list_content").append('<dl class="actionClick" data-id="'+json[i].id+'"><dt><img src="'+json[i].image+'"></dt><dd class="action_centen_name">'+json[i].name+'</dd><dd><span class="action_centen_money">¥'+json[i].now_price+'</span><span class="action_centen_num">已出价'+json[i].price_count+'次</span></dd></dl>')
 				}
 			}).error(err => {
 				console.log(err);
@@ -149,7 +140,8 @@
 			$(sbj).siblings("li").css("border","none");
 			// console.log(sbj.value);
 			// 分类
-			type = sbj.value
+			type = sbj.value;
+			console.log(type)
 			if(sbj.value){
 				$('.Sort-eject').removeClass('grade-w-roll');
 				auctionApi();

@@ -13,6 +13,7 @@
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="../../js/swiper-3.4.0.jquery.min.js" ></script>
 		<script src="../../js/config.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<title>专家列表</title>
 		<style>
 			body {
@@ -27,9 +28,16 @@
 		</style>
 	</head>
 	<body>
-		<div class="container">
+		<div class="container" id="container">
 			<div class="expertify_list">
-				<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')"><div class="index_classify_content"><dl><dt><img src="../../img/111.jpg"></dt><dd class="inclassify_title">余老师</dd><dd class="expert_introduce"><i class="iconfont jian_icon">&#xe626;</i>玉器</dd></dl></div>
+				<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')">
+					<div class="index_classify_content">
+						<dl>
+							<dt><img src="../../img/111.jpg"></dt>
+							<dd class="inclassify_title">{{item.name}}</dd>
+							<dd class="expert_introduce"><i class="iconfont jian_icon">&#xe626;</i>玉器</dd>
+						</dl>
+					</div>
 			</div>
 			<div class="infor_content">
 				<!-- <p class="infor_content_title">上传藏品图片</p> -->
@@ -39,7 +47,7 @@
 						<!--    照片添加    -->
 						<div class="z_photo" id="z_photo">
 							<div class="z_file">
-								<input class="huodong-msg" type="file" name="file" id="file" value="" accept="image/*" multiple onchange="imgChange(this,'z_photo','z_file');" />
+								<input class="huodong-msg" type="file" name="file" id="file" value="" accept="image/*" multiple @onchange="imgChange(this,'z_photo','z_file');" />
 							</div>
 						</div>
 					
@@ -62,191 +70,196 @@
 					<textarea class="feedback_input" name="content" placeholder="我们将为您不断改进"></textarea>
 				</div>
 			</div>
-			<input type="button" value="提交"  class="expertIdent_btn" onclick="expertIdentFun()"/>
+			<input type="button" value="提交"  class="expertIdent_btn" @click="expertIdentFun()"/>
 		</div>
 	</body>
 	<script type="text/javascript">
 		
-		const getExpertAppraisalDetailt = _Config_.API_PATH + '/api/getExpertAppraisalDetailt'//专家鉴定详情
+		const getExpertAppraisalDetailApi = _Config_.API_PATH + '/api/getExpertAppraisalDetail'//专家鉴定详情
 		const expertAppraisalCreate = _Config_.API_PATH + '/api/expertAppraisalCreate'//专家鉴定
-		const imageUpload = _Config_.API_PATH + '/homeApi/upload' //上传图片
-		$(document).ready(function () {
-			// raisalDetailt();
-		})
-		function GetUrlParam(paraName) {
-			var url = document.location.toString();
-			var arrObj = url.split("?");
-			if (arrObj.length > 1) {
-				var arrPara = arrObj[1].split("&");
-				var arr;
-				for (var i = 0; i < arrPara.length; i++) {
-					arr = arrPara[i].split("=");
-		 
-					if (arr != null && arr[0] == paraName) {
-						return arr[1];
-					}
+		const imageUpload = _Config_.API_PATH + '/api/upload' //上传图片
+		var app = new Vue({
+			el: '#container',
+			data:function() {
+				return{
+					details:{},
+					infoLIst:[],
 				}
-				return "";
-			}
-			else {
-				return "";
-			}
-		}
-		var appraisal_id = GetUrlParam("id") //获取当前链接指定字段
-		let raisalDetailt = () =>{
-			createAjax({
-				type: 'POST',
-				dataType: 'JSON',
-				url: getExpertAppraisalDetailt,
-				data: {
-					appraisal_id,
-				},
-			}).success(res => {
-				console.log(res);
-				var json = res.data.data;
-				$(".expertify_list").empty();
-				for(var i=0;i<json.length;i++){
-					$(".expertify_list").append('<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')"><div class="index_classify_content"><dl><dt><img src="'+json[i].image+'"></dt><dd class="inclassify_title">'+json[i].name+'</dd><dd class="expert_introduce">'+json[i].content+'</dd></dl></div>')
-				}
-				// 推荐指数
-			}).error(err => {
-				console.log(err);
-			})
-		}
-		function expertIdentFun(){
-			createAjax({
-				type: 'POST',
-				dataType: 'JSON',
-				url: expertAppraisalCreate,
-				data: {
-					expert_id,
-					user_id,
-					images,
-					appraisal_need
-				},
-			}).success(res => {
-				console.log(res);
-				var json = res.data.data;
-				$(".expertify_list").empty();
-				for(var i=0;i<json.length;i++){
-					$(".expertify_list").append('<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')"><div class="index_classify_content"><dl><dt><img src="'+json[i].image+'"></dt><dd class="inclassify_title">'+json[i].name+'</dd><dd class="expert_introduce">'+json[i].content+'</dd></dl></div>')
-				}
-				// 推荐指数
-			}).error(err => {
-				console.log(err);
-			})
-		}
-		// function expertIdentFun(){
-		// 	window.location.href='expert_upload.html?id='+appraisal_id;
-		// }
-		// 添加图片
-		function imgChange(obj,obj1, obj2) {
-			// console.log(obj.files[0]);
-			var fileNum1 = 0;
-			var fileNum2 = event.target.files.length;
-			var a = document.getElementById("z_photo"),
-				b = a.getElementsByTagName("div");
-			fileNum1 = b.length;
-			var j = fileNum1 + fileNum2 - 1;
-			//上传图片个数限制
-			if(fileNum1 > 5 || j > 5) {
-				alert("最多只能上传5张图片！");
-				return;
-			}
-			
-			//获取点击的文本框
-			var file = document.getElementById("file");
-			//存放图片的父级元素
-			var imgContainer = document.getElementsByClassName(obj1)[0];
-			//获取的图片文件
-			var fileList = file.files;
-			//文本框的父级元素
-			var input = document.getElementsByClassName(obj2)[0];
-			var imgArr = [];
-			//遍历获取到得图片文件
-			for(var i = 0; i < fileList.length; i++) { 
-				var imgUrl = window.URL.createObjectURL(file.files[i]);
-				// console.log(imgUrl);
-				//进行ajax上传图片并返回图片路径
-				var formData = new FormData(); 
-				formData.append('picture',file.files[i]);//命名传值的字段
-				$.ajax({ 
-						url: imageUpload, 
-						type: 'POST', 
-						cache: false, //上传文件不需要缓存 
-						data: formData,
-						processData: false, // 告诉jQuery不要去处理发送的数据 
-						contentType: false, 
-						// 告诉jQuery不要去设置Content-Type请求头 
-						success: function (data) {
-							console.log(data);
-							question_img.push(data.id)
-						// if(data.code == 200)
-						// {
-							//url
-							//添加input框
-							imgArr.push(imgUrl);
-							var img = document.createElement("img");
-							img.setAttribute("src", data.img_url);
-							var imgAdd = document.createElement("div");
-							var imgAddInput = document.createElement("input");
-							imgAddInput.setAttribute("type", "hidden");
-							imgAddInput.setAttribute("name", "imgs[]");
-							imgAddInput.setAttribute("value", data.img_url);
-							imgAdd.appendChild(imgAddInput);
-							imgAdd.setAttribute("class", "z_addImg");
-							imgAdd.appendChild(img);
-							imgContainer.appendChild(imgAdd);
-							//添加进去
-							file.classList.add("z_cl");
-							imgRemove();
-							$(".hidden_one").show();
-		
-							
-						// }else if(data.code == 500){
-						// 	alert(data.url);
-						// }
-					}, 
-					error: function (data) {
-						alert("上传失败");
-						return; 
-					} 
-				}) 
-		
-		
-			};
-			
-		};
-		//删除图片
-		function imgRemove() {
-			var imgList = document.getElementsByClassName("z_addImg");
-			var mask = document.getElementsByClassName("z_mask")[0];
-			var cancel = document.getElementsByClassName("z_cancel")[0];
-			var sure = document.getElementsByClassName("z_sure")[0];
-			var file = document.getElementById("file");
-			var subm = document.getElementsByClassName("feedback_submit");
-			for(var j = 0; j < imgList.length; j++) {
-				imgList[j].index = j;
-				imgList[j].onclick = function() {
-					var t = this;
-					mask.style.display = "block";
-					cancel.onclick = function() {
-						mask.style.display = "none";
-					};
-					sure.onclick = function() {
-						mask.style.display = "none";
-		
-						if(file.classList.contains("z_cl")) {
-							file.outerHTML = file.outerHTML;
+			},
+			mounted(){
+				this.raisalDetailt();
+			},
+			methods:{
+				// 查询当前专家鉴定详情
+				raisalDetailt (){
+					function GetUrlParam(paraName) {
+						var url = document.location.toString();
+						var arrObj = url.split("?");
+						if (arrObj.length > 1) {
+							var arrPara = arrObj[1].split("&");
+							var arr;
+							for (var i = 0; i < arrPara.length; i++) {
+								arr = arrPara[i].split("=");
+					 
+								if (arr != null && arr[0] == paraName) {
+									return arr[1];
+								}
+							}
+							return "";
 						}
-		
-						t.parentNode.removeChild(t);
-						file.classList.remove("z_cl");
+						else {
+							return "";
+						}
+					}
+					var expert_user_id = GetUrlParam("id") //获取当前链接指定字段
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: getExpertAppraisalDetailApi,
+						data: {
+							expert_user_id,
+						},
+					}).success(res => {
+						console.log(res);
+						var json = res.data.data;
+						this.details = json;
+						// 推荐指数
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				// 提交鉴定
+				expertIdentFun(){
+					createAjax({
+						type: 'POST',
+						dataType: 'JSON',
+						url: expertAppraisalCreate,
+						data: {
+							expert_id,
+							user_id,
+							images,
+							appraisal_need
+						},
+					}).success(res => {
+						console.log(res);
+						var json = res.data.data;
+						$(".expertify_list").empty();
+						for(var i=0;i<json.length;i++){
+							$(".expertify_list").append('<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')"><div class="index_classify_content"><dl><dt><img src="'+json[i].image+'"></dt><dd class="inclassify_title">'+json[i].name+'</dd><dd class="expert_introduce">'+json[i].content+'</dd></dl></div>')
+						}
+						// 推荐指数
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				// 添加图片
+				imgChange(obj,obj1, obj2) {
+					// console.log(obj.files[0]);
+					var fileNum1 = 0;
+					var fileNum2 = event.target.files.length;
+					var a = document.getElementById("z_photo"),
+						b = a.getElementsByTagName("div");
+					fileNum1 = b.length;
+					var j = fileNum1 + fileNum2 - 1;
+					//上传图片个数限制
+					if(fileNum1 > 5 || j > 5) {
+						alert("最多只能上传5张图片！");
+						return;
+					}
+					
+					//获取点击的文本框
+					var file = document.getElementById("file");
+					//存放图片的父级元素
+					var imgContainer = document.getElementsByClassName(obj1)[0];
+					//获取的图片文件
+					var fileList = file.files;
+					//文本框的父级元素
+					var input = document.getElementsByClassName(obj2)[0];
+					var imgArr = [];
+					//遍历获取到得图片文件
+					for(var i = 0; i < fileList.length; i++) { 
+						var imgUrl = window.URL.createObjectURL(file.files[i]);
+						// console.log(imgUrl);
+						//进行ajax上传图片并返回图片路径
+						var formData = new FormData(); 
+						formData.append('picture',file.files[i]);//命名传值的字段
+						$.ajax({ 
+								url: imageUpload, 
+								type: 'POST', 
+								cache: false, //上传文件不需要缓存 
+								data: formData,
+								dataType:'JSON',
+								processData: false, // 告诉jQuery不要去处理发送的数据 
+								contentType: false, 
+								headers:{
+									'uid':localStorage.getItem("user_id")
+								},
+								// 告诉jQuery不要去设置Content-Type请求头 
+								success: function (data) {
+									console.log(data);
+									question_img.push(data.id)
+									//添加input框
+									imgArr.push(imgUrl);
+									var img = document.createElement("img");
+									img.setAttribute("src", data.img_url);
+									var imgAdd = document.createElement("div");
+									var imgAddInput = document.createElement("input");
+									imgAddInput.setAttribute("type", "hidden");
+									imgAddInput.setAttribute("name", "imgs[]");
+									imgAddInput.setAttribute("value", data.img_url);
+									imgAdd.appendChild(imgAddInput);
+									imgAdd.setAttribute("class", "z_addImg");
+									imgAdd.appendChild(img);
+									imgContainer.appendChild(imgAdd);
+									//添加进去
+									file.classList.add("z_cl");
+									this.imgRemove();
+									$(".hidden_one").show();
+							}, 
+							error: function (data) {
+								alert("上传失败");
+								return; 
+							} 
+						})
 					};
-		
+					
+				},
+				//删除图片
+				imgRemove() {
+					var imgList = document.getElementsByClassName("z_addImg");
+					var mask = document.getElementsByClassName("z_mask")[0];
+					var cancel = document.getElementsByClassName("z_cancel")[0];
+					var sure = document.getElementsByClassName("z_sure")[0];
+					var file = document.getElementById("file");
+					var subm = document.getElementsByClassName("feedback_submit");
+					for(var j = 0; j < imgList.length; j++) {
+						imgList[j].index = j;
+						imgList[j].onclick = function() {
+							var t = this;
+							mask.style.display = "block";
+							cancel.onclick = function() {
+								mask.style.display = "none";
+							};
+							sure.onclick = function() {
+								mask.style.display = "none";
+				
+								if(file.classList.contains("z_cl")) {
+									file.outerHTML = file.outerHTML;
+								}
+				
+								t.parentNode.removeChild(t);
+								file.classList.remove("z_cl");
+							};
+				
+						}
+					};
+					
+				},
+				expertIdentFun(){
+					window.location.href='expert_upload.html?id='+appraisal_id;
 				}
-			};
-			
-		};
+			}
+		})
+		
 	</script>
 </html>

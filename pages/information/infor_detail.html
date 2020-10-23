@@ -7,15 +7,19 @@
 		<link href="../../css/china_antique.css" rel="stylesheet" />
 		<link href="../../css/iconfont.css" rel="stylesheet" />
 		<link href="../../css/swiper.min.css" rel="stylesheet" />
+		<link href="../../css/layer.css" rel="stylesheet" />
 		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
 		<script src="../../js/config.js"></script>
+		<!-- 生产环境版本，优化了尺寸和速度 -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="../../js/layer.js"></script>
 		<title>资讯详情</title>
 	</head>
 	<body>
 		<!-- banner -->
-		<div class="index_div">
+		<div  class="index_div">
 			<!-- Swiper -->
 			<div class="swiper-container">
 				<div class="swiper-wrapper banner_list">
@@ -37,27 +41,30 @@
 			});
 			</script>
 		</div>
+		<div  id="infor_detail">
 		<div class="infor_content">
-			<p class="infor_title">资讯详情明清瓷器标题</p>
+			<p class="infor_title">{{details.name}}</p>
 			<p class="infor_mess">
-				<span class="infor_time">结束时间：2020-07-09 13:00:00</span>
-				 <span class="infor_seedetail">查看详情</span>
+				<span class="infor_time">结束时间：{{details.created_time}}
+				</span>
+				<!-- <span class="infor_seedetail">查看详情</span> -->
 			</p>
 
 			<h1 class="center_img"><img src="../../img/banner01.png"></h1>
 			<p class="infor_uptitle">拍品展示</p>
 			<div class="infor_updetail">
-				<p>详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器详情内容中国古代瓷器</p>
 			</div>
 		</div>
 		<footer class="infor_footer">
-			<span class="colect_btn">收藏</span>
-			<span class="assess_btns">鉴定评估</span>
+			<span class="colect_btn" @click="colectFun()">收藏</span>
+			<span class="assess_btns" @click="assessFun()">鉴定评估</span>
 		</footer>
+		</div>
 	</body>
 	<script>
 		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
 		const infordetail = _Config_.API_PATH + '/api/getRealDetail'//广告列表
+		const colectinfo = _Config_.API_PATH + '/api/addCollection'//收藏
 		function GetUrlParam(paraName) {
 			var url = document.location.toString();
 			var arrObj = url.split("?");
@@ -77,33 +84,69 @@
 				return "";
 			}
 		}
-		var real_id = GetUrlParam("real_id") //获取当前链接指定字段
-		user_id
-		$(document).ready(function () {
-			infordetailApi()
-		})
-		// 资讯详情
-		let infordetailApi = () => {
-			createAjax({
-				type: 'GET',
-				dataType: 'JSON',
-				url: infordetail,
-				data: {	
-					real_id:real_id,
-					user_id:user_id
+		var real_id = GetUrlParam("real_id") //获取资讯id
+		console.log(real_id)
+		var user_id = localStorage.getItem("user_id");
+		new Vue({
+		    el:"#infor_detail",
+		    data:function() {
+				return{
+					details:{}
 				}
-			}).success(res => {
-				// console.log(res);
-				if(res.data.length<0){
-					for(var i=0;i<res.data.length;i++){
-						$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data[i].image+'"></div>');
-					}	
-				}else{
-					console.log("banner暂未更新！")
-				}	
-			}).error(err => {
-				console.log(err);
-			})
-		}
+		    },    
+			mounted(){
+				this.infordetailApi();
+			},
+		    methods:{
+				// 资讯详情
+				infordetailApi (){
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: infordetail,
+						data: {	
+							real_id:real_id,
+							user_id:user_id
+						}
+					}).success(res => {
+						console.log(res);
+						this.details = res.data
+						if(res.data){
+							$(".infor_updetail").html(res.data.images_detail)
+							
+						}else{
+							console.log("banner暂未更新！")
+						}	
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				colectFun () {
+					createAjax({
+						type: 'POST',
+						dataType: 'JSON',
+						url: colectinfo,
+						data: {	
+							real_id:real_id,
+							user_id:user_id
+						}
+					}).success(res => {
+						console.log(res);
+						layer.msg('收藏成功！');
+						// alert(res.msg);
+						
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				assessFun(){
+					window.location.href='../assess/assess_uplade.html'
+				}
+				
+				
+			},
+		})
+		
+		
 	</script>
 </html>
