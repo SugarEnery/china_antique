@@ -13,8 +13,8 @@
 		<script src="../js/rem.js" type="text/javascript"></script>
 		
 		<script src="../js/config.js"></script>
-		<!-- <script src="../js/swiper.min.js" type="text/javascript"></script> -->
-		<script src="../js/swiper-3.4.0.jquery.min.js" type="text/javascript"></script>
+		<script src="../js/swiper.min.js" type="text/javascript"></script>
+		<!-- <script src="../js/swiper-3.4.0.jquery.min.js" type="text/javascript"></script> -->
 		<link rel="stylesheet" href="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/index.css">
 		<!-- 引入 Vue 和 Vant 的 JS 文件 -->
 		<script src="https://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js"></script>
@@ -36,15 +36,14 @@
 		<!-- banner -->
 		<div class="index_div">
 			<div class="swiper-container swiperBanner">
-				<div class="swiper-wrapper" ref="mySwiper" v-if="bannerList.length" :options="swiperOption">
+				<div class="swiper-wrapper" ref="mySwiper">
 					<div class="swiper-slide" v-for="(item,index) in bannerList" >
 						<img :src="item.image" alt=""/>
 					</div>
 				</div>
-				<div class="swiper-pagination" slot="pagination" v-for="(item,index) in bannerList" :key="index" slot="pagination">
+				<div class="swiper-pagination" v-for="(item,index) in bannerList" :key="index">
 				</div>
 			</div>
-			
 		</div>
 		<div class="index_nav_div">
 			<a href="information/infor_list.html">
@@ -114,28 +113,31 @@
 		const inforisly = _Config_.API_PATH + '/api/getRealList'//资讯列表
 		const type = 1;//首页广告位
 		const typecenter = 2;//主页中部图
+		
 		var vue = new Vue({
 		    el:"#vuediv",
 		    data(){
 				return{
 					active: 'home',
 					bannerList:[],  
-					swiperOption:{
-						// 分页器
-						pagination: {
-							el: '.swiper-pagination',
-							dynamicBullets: true,
-						},
-						// 自动切换图配置
-						autoplay:true,
-					}
-				}
-				
+				}			
 		    },
-			mounted(){
+			created(){
 				this.loginInApi();
+				
+			},
+			mounted(){
+				
+				
 			},
 		    methods:{
+				_initswiper(){
+					var swiperBanner = new Swiper('.swiperBanner', {
+						slidesPerView: 5,
+						freeMode: true,
+						loop:true
+					});
+				},
 				loginInApi(){
 					var url = window.location.href;//获取整个url
 					// var redirect_url = encodeURIComponent(url);
@@ -177,7 +179,9 @@
 								localStorage.setItem("nickname", res.data.nickname);
 								localStorage.setItem("headimgurl", res.data.headimgurl)
 								localStorage.setItem("user_id", res.data.id);
+								
 								this.bannerApi();
+								// this.doSwiper();
 								this.centerApi();
 								this.inforApi();
 								
@@ -199,9 +203,7 @@
 					}).success(res => {
 						// console.log(res);
 						this.bannerList = res.data;
-						// this.$nextTick(function(){
-						// 	this.doSwiper()
-						// }) 	
+						this._initswiper();
 						
 					}).error(err => {
 						console.log(err);
