@@ -46,38 +46,43 @@
 				</div>
 				<div class="auctiond_cont">
 					<span class="auctiond_money">
-						<i class="auctiond_money_top">RM<br/>当前价</i>
-						<i class="auctiond_money_mon">{{details.now_price}}</i>
+						<i class="auctiond_money_top">RMB<br/>当前价</i>
+						<i class="auctiond_money_mon">¥ {{details.now_price}}</i>
 					</span>
 					<span class="auction_time">{{details.end_time}}</span>
 				</div>
 				<h1 class="center_img"><img src="../../img/banner01.png"></h1>
 				<p class="infor_uptitle">出价记录</p>
 				<div class="auction_updetail">
-					<dl  v-for="(item, index) in infoLIst" :key="item.id">
-						<dt><img :src="item.headimgurl"></dt>
-						<dd class="actionup_title">
-							<span class="actionup_name">{{item.name}}</span>
-							<span class="actionup_state colorred" v-if="index == 0">	
-								领先
-							</span>
-							<span class="actionup_state colorgray" v-if="index != 0">
-								出局
-							</span>
-						</dd>
-						<dd class="actionup_money">
-							<span class="actionup_money all_colorgray">
-								{{item.end_price}}
-							</span>
-							<!-- <span class="actionup_money all_colorred" v-if="index == 0">
-								{{item.end_price}}
-							</span>
-							<span class="actionup_money all_colorgray" v-else="">
-								{{item.end_price}}
-							</span> -->
-							<span class="actionup_time">{{item.created_time}}</span>
-						</dd>
-					</dl>
+					<div class="auction_slide">
+						<dl  v-for="(item, index) in infoLIst" :key="item.id" v-if="infoLIst.length > 3" >
+							<dt><img :src="item.headimgurl"></dt>
+							<dd class="actionup_title">
+								<span class="actionup_name">{{item.nickname}}</span>
+								<span class="actionup_state colorred" v-if="index == 0">	
+									领先
+								</span>
+								<span class="actionup_state colorgray" v-if="index != 0">
+									出局
+								</span>
+							</dd>
+							<dd class="actionup_money">
+								<span class="actionup_money all_colorgray">
+									{{item.end_price}}
+								</span>
+								<span class="actionup_time">{{item.created_time}}</span>
+							</dd>
+						</dl>
+						<div v-show="infoLIst.length <= 0">
+							抢第一个沙发
+						</div>
+					</div>
+					<div v-show="infoLIst.length > 3" @click="selectdownFun()" class="selecteBtn">
+					  <i class="iconfont infor_ul_icon" v-html="slideBtn">{{ slideBtn }}</i>
+					</div>
+					<div v-html="details.images" class="auction_content">
+						{{details.images}}
+					</div>
 				</div>
 			</div>
 			<input type="button" value="立即出价"  class="assess_btn" @click="auctionFun ()"/>
@@ -87,7 +92,6 @@
 		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
 		const autionDetail = _Config_.API_PATH + '/api/getAuctionDetail';//详情
 		const auctionjoin = _Config_.API_PATH + '/api/joinAuction';//参加拍卖
-		
 		function GetUrlParam(paraName) {
 			var url = document.location.toString();
 			var arrObj = url.split("?");
@@ -110,12 +114,14 @@
 		var auction_id = GetUrlParam("auction_id") //获取当前链接指定字段
 		console.log(auction_id)
 		var user_id = localStorage.getItem('user_id');
+		var dnum = 0;
 		var app = new Vue({
 			el: '#auction_divv',
 			data:function() {
 				return{
 					details:{},
-					infoLIst:[]
+					infoLIst:[],
+					slideBtn: '&#xe614;'
 				}
 			},
 			mounted(){
@@ -124,6 +130,23 @@
 				
 			},
 			methods:{
+				selectdownFun(){
+					dnum = dnum + 1;
+					if (dnum % 2 != 0) {
+						$(".auction_slide").stop(true, true).animate({
+							height: "100%",
+							
+						}, 500)
+						this.slideBtn = '&#xe65f;';
+						
+					} else {
+						$(".auction_slide").animate({
+							height: "4rem",
+							
+						}, 500)
+						this.slideBtn =' &#xe614;';
+					}
+				},
 				auciondetailApi (){
 					createAjax({
 						type: 'GET',
@@ -134,9 +157,14 @@
 						}
 					}).success(res => {
 						console.log(res);
-						this.details = res.data;
-						this.infoLIst = res.data.auction_order_list;
-						$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data.image+'"></div>');
+						if(res.code == '-1'){
+							layer.msg(res.msg)
+						}else{
+							this.details = res.data;
+							this.infoLIst = res.data.auction_order_list;
+							$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data.image+'"></div>');
+						}
+						
 					}).error(err => {
 						console.log(err);
 					})
@@ -154,29 +182,36 @@
 					}).success(res => {
 						console.log(res);
 						if(res.code == "1"){
-							// 调用支付按钮
-							WeixinJSBridge.invoke(
-							   'getBrandWCPayRequest', {
-									"appId":res.data.appId,     //公众号名称，由商户传入     
-									"timeStamp":res.data.timeStamp,         //时间戳，自1970年以来的秒数     
-									"nonceStr":res.data.nonceStr, //随机串     
-									"package":res.data.package,     
-									"signType":"MD5",         //微信签名方式：     
-									"paySign": res.data.paySign//微信签名 
-								},
-							    function(res){
-									console.log("微信支付返回值:");
-									console.log(res);
-									if (res.err_msg == "get_brand_wcpay_request:ok") {
-										// 使用以上方式判断前端返回,微信团队郑重提示：
-										//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-										alert("get_brand_wcpay_request:ok");
+							if(res.data !=''){
+								// 调用支付按钮
+								WeixinJSBridge.invoke(
+								   'getBrandWCPayRequest', {
+										"appId":res.data.appId,     //公众号名称，由商户传入     
+										"timeStamp":res.data.timeStamp,         //时间戳，自1970年以来的秒数     
+										"nonceStr":res.data.nonceStr, //随机串     
+										"package":res.data.package,     
+										"signType":"MD5",         //微信签名方式：     
+										"paySign": res.data.paySign//微信签名 
+									},
+								    function(res){
+										console.log("微信支付返回值:");
+										console.log(res);
+										if (res.err_msg == "get_brand_wcpay_request:ok") {
+											// 使用以上方式判断前端返回,微信团队郑重提示：
+											//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+											alert("get_brand_wcpay_request:ok");
+										}
+										location.reload() 
+										// alert(res.err_msg);
+										// alert(res); // 显示是个 Object
 									}
-									location.reload() 
-									// alert(res.err_msg);
-									// alert(res); // 显示是个 Object
-								}
-							); 
+								); 
+							}else{
+								layer.msg('参加拍卖成功！')
+								location.reload();
+								
+							}
+							
 						}else if(res.code == "-1"){
 							layer.msg(res.msg);
 							return false;

@@ -36,13 +36,18 @@
 		<!-- banner -->
 		<div class="index_div">
 			<div class="swiper-container swiperBanner">
-				<div class="swiper-wrapper" ref="mySwiper">
+				<div class="swiper-wrapper"  v-if="bannerList.length">
 					<div class="swiper-slide" v-for="(item,index) in bannerList" >
-						<img :src="item.image" alt=""/>
+						<img :src="item.image" alt="" @click="linkclickFun(item.url_type)"/>
 					</div>
 				</div>
-				<div class="swiper-pagination" v-for="(item,index) in bannerList" :key="index">
+				<!-- 分页器 -->
+				<div class="swiper-pagination paging" >
 				</div>
+				
+				<!-- 如果需要导航按钮 -->
+				<!-- <div class="swiper-button-prev"></div>
+				<div class="swiper-button-next"></div> -->
 			</div>
 		</div>
 		<div class="index_nav_div">
@@ -91,7 +96,23 @@
 				<!-- swiper2 -->
 				<div class="swiper-container swiper2">
 					<div class="swiper-wrapper inforify_list">
-						
+						<!-- <div class="swiper-slide swiper-no-swiping">
+							<div class="index_classify_content">
+								<dl data-id="'+json[i].id+'">
+									<dt><img src="'+json[i].images+'"></dt>
+									<dd class="inclassify_title">
+										'+json[i].name+'
+										<span class="recommend_num">
+										<ul class="cleanfloat">
+											<li class="hs">&#9733;</li>
+										</ul>
+									</span>
+									</dd>
+									<dd class="expert_introduce">'+json[i].created_time+'</dd>
+									<dd class="expert_introduce">'+json[i].source_name+'</dd>
+								</dl>
+							</div>
+						</div> -->
 					</div>
 				</div>
 			
@@ -111,6 +132,7 @@
 		const bannerList = _Config_.API_PATH + '/api/getAdsList'//广告列表
 		const inforList = _Config_.API_PATH + '/api/getRealTypeList'//资讯分类列表
 		const inforisly = _Config_.API_PATH + '/api/getRealList'//资讯列表
+		const personalInfoApi = _Config_.API_PATH + '/api/getPersonalInfo';
 		const type = 1;//首页广告位
 		const typecenter = 2;//主页中部图
 		
@@ -119,7 +141,9 @@
 		    data(){
 				return{
 					active: 'home',
-					bannerList:[],  
+					bannerList:[],
+					useris_vip:'',
+					user_id:''
 				}			
 		    },
 			created(){
@@ -127,16 +151,14 @@
 				
 			},
 			mounted(){
-				
-				
 			},
 		    methods:{
 				_initswiper(){
-					var swiperBanner = new Swiper('.swiperBanner', {
-						slidesPerView: 5,
-						freeMode: true,
-						loop:true
-					});
+					var swiperBanner = new Swiper ('.swiperBanner', {	
+						autoplay: 3000,
+						pagination : '.paging',
+						loop: true, // 循环模式选项
+					})
 				},
 				loginInApi(){
 					var url = window.location.href;//获取整个url
@@ -179,17 +201,45 @@
 								localStorage.setItem("nickname", res.data.nickname);
 								localStorage.setItem("headimgurl", res.data.headimgurl)
 								localStorage.setItem("user_id", res.data.id);
+								this.user_id = res.data.id
 								
 								this.bannerApi();
 								// this.doSwiper();
 								this.centerApi();
 								this.inforApi();
+								this.personalInfoFun();
 								
 							}
 							
 						}).error(err => {
 							console.log(err);
 						})
+					}
+				},
+				personalInfoFun(){
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: personalInfoApi,
+						data: {	
+							user_id:this.user_id,
+						}
+					}).success(res => {
+						console.log(res);
+						this.useris_vip = res.data.is_vip;
+						localStorage.setItem('useris_vip',res.data.is_vip)
+						
+						
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				linkclickFun(linkurl){
+					if(linkurl == '1' ){
+						return false;
+						// 不跳转
+					}else if(linkurl == '2'){
+						window.location.href="http://api.chinabogu.com/china_antique/pages/experts/expert_list.html";
 					}
 				},
 				bannerApi(){				
@@ -201,9 +251,11 @@
 							type:type,
 						}
 					}).success(res => {
-						// console.log(res);
+						console.log(res);
 						this.bannerList = res.data;
-						this._initswiper();
+						this.$nextTick(function () {
+							this._initswiper();
+						})
 						
 					}).error(err => {
 						console.log(err);
@@ -271,23 +323,29 @@
 								type,
 							},
 						}).success(res => {
-							// console.log('资讯列表',res);
+							console.log('资讯列表',res);
 							var json = res.data.data;
 							$(".inforify_list").empty();
 							var html='';
 							var htmlul='';
-							for(var i=0;i<json.length;i++){
-								html += '<div class="swiper-slide swiper-no-swiping"><div class="index_classify_content"><dl data-id="'+json[i].id+'"><dt><img src="'+json[i].images+'"></dt><dd class="inclassify_title">'+json[i].name+'<span class="recommend_num"><ul class="cleanfloat">';
-								// console.log(json[i].recommend_num)
-								for(j = 0;j<json[i].recommend_num;j++){
-									html += '<li class="hs">&#9733;</li>';
-								}
-								// console.log(html)
-								html += '</ul></span></dd><dd class="expert_introduce">'+json[i].created_time+'</dd><dd class="expert_introduce">'+json[i].source_name+'</dd></dl></div>';
-								$(".inforify_list").append(html);
+							if(json.length == 0){
+								console.log('为空')
 								document.getElementById("loading").style.display = "none";	
-								
+							}else{
+								for(var i=0;i<json.length;i++){
+									console.log(11111111111111)
+									html += '<div class="swiper-slide swiper-no-swiping"><div class="index_classify_contentt"><dl data-id="'+json[i].id+'"><dt><img src="'+json[i].images+'"></dt><dd class="inclassify_titles">'+json[i].name+'<span class="recommend_num"><ul class="cleanfloat">';
+									for(j = 0;j<json[i].recommend_num;j++){
+										html += '<li class="hs">&#9733;</li>';
+									}
+									// console.log(html)
+									html += '</ul></span></dd><dd class="expert_introduce">'+json[i].created_time+'</dd><dd class="expert_introduce">'+json[i].source_name+'</dd></dl></div>';
+									
+									$(".inforify_list").append(html);
+									document.getElementById("loading").style.display = "none";	
+								}
 							}
+							
 							// 推荐指数
 						}).error(err => {
 							console.log(err);
@@ -350,7 +408,7 @@
 				}
 		    },
 		})
-		$(document).on("click",".index_classify_content dl",function(){
+		$(document).on("click",".index_classify_contentt dl",function(){
 			// console.log(11);
 			var real_id = $(this).attr("data-id");
 			location.href="information/infor_detail.html?real_id="+real_id;

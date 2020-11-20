@@ -42,36 +42,62 @@
 		</style>
 	</head>
 	<body>
-		<h1 class="assess_banner"><img src="../../img/banner02.png"></h1>
-		<div class="idcard">
-			<div class="idcard_img_background">
-				<img src="../../img/id_people.png" class="idcard_img" id="idcard_i1">
-				<p class="p1"><img src="../../img/id_camera.png" width="60%"><input type="file" id="idcard_front" accept="image/*" onchange="imgPreview(this)" class="file-style" name="zheng"></p>
-				<p class="p2">点击上传eBay或雅虎图片</p>
-			</div>
-		</div>
-		<div class="assess_content">
-			<label>
-				<span>拍品链接：</span><input type="text" placeholder="ebody雅虎链接或ID" class="ass_url">	
-			</label>
-			<label>
-				<span>需求描述：</span><input type="text" placeholder="宝贝鉴定评估需求" class="ass_cont">	
-			</label>
-			<label class="ass_cla">
-				<span class="ass_cla_title">拍品级别：</span>
-				<div id="Vueselect">
-					<van-dropdown-menu>
-						<van-dropdown-item v-model="value1" :options="option1" @change="change_tab()"/>
-					</van-dropdown-menu>
+		<div class="container containerBottom" >
+			<!-- banner -->
+			<div class="assess_banner">
+				<div class="swiper-container swiperBanner">
+					<div class="swiper-wrapper"  v-if="bannerList.length">
+						<div class="swiper-slide" v-for="(item,index) in bannerList" >
+							<img :src="item.image" alt="" @click="linkclickFun(item.url_type)"/>
+						</div>
+					</div>
+					<!-- 分页器 -->
+					<div class="swiper-pagination paging" >
+					</div>
+					
+					<!-- 如果需要导航按钮 -->
+					<!-- <div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div> -->
 				</div>
-			</label>
-			
+			</div>
+			<div class="idcard">
+				<div class="idcard_img_background">
+					<img src="../../img/id_people.png" class="idcard_img" id="idcard_i1">
+					<p class="p1"><img src="../../img/id_camera.png" width="60%"><input type="file" id="idcard_front" accept="image/*" @change="imgPreview(this)" class="file-style" name="zheng"></p>
+					<p class="p2">点击上传eBay或雅虎图片</p>
+				</div>
+			</div>
+			<div class="assess_content">
+				<label>
+					<span>拍品链接：</span><input type="text" placeholder="ebody雅虎链接或ID" class="ass_url" :value="link">	
+				</label>
+				<label>
+					<span>需求描述：</span><input type="text" placeholder="宝贝鉴定评估需求" class="ass_cont">	
+				</label>
+				<label class="ass_cla">
+					<span class="ass_cla_title">拍品级别：</span>
+					<div value="0">普品</div>
+					<!-- <div id="Vueselect">
+						<van-dropdown-menu>
+							<van-dropdown-item v-model="value1" :options="option1" @change="change_tab()"/>
+						</van-dropdown-menu>
+					</div> -->
+				</label>
+				
+			</div>
+			<input type="button" value="进行评估"  class="assess_btn" @click="assessFun()"/>
 		</div>
-		<input type="button" value="进行评估"  class="assess_btn" onclick="assessFun()"/>
+		
 	</body>
 	<script>
+		const bannerList = _Config_.API_PATH + '/api/getAdsList'//广告列表
+		const assessUploade = _Config_.API_PATH + '/api/assessPlatform'//详情
+		const imageUpload = _Config_.API_PATH + '/api/upload' //上传图片
+		var user_id = localStorage.getItem('user_id');
+		var imgurl;
+		const bannertype = 4;//资讯banner
 	    new Vue({
-	        el:"#Vueselect",
+	        el:".container",
 	        data:{
 	            value1: 0,
 				value2: 'a',
@@ -79,136 +105,193 @@
 					{ text: '普品', value: 0 },
 					{ text: '官窑', value: 1 },
 				],
+				link:'',
+				bannerList:[],
 	        },
 	        methods:{
 				change_tab(){
-					layer.msg('上传成功！');
+					layer.msg('选择成功！');
 				}
 	        },
 	        created(){
-	        
-	        }
+				this.getOneFun();
+				this.bannerApi();
+	        },
+			methods:{
+				_initswiper(){
+					var swiperBanner = new Swiper ('.swiperBanner', {	
+						autoplay: 3000,
+						pagination : '.paging',
+						loop: true, // 循环模式选项
+					})
+				},
+				bannerApi() {
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: bannerList,
+						data: {	
+							type:bannertype,
+						}
+					}).success(res => {
+						console.log(res);
+						if(res.data.length > 0){
+							this.bannerList = res.data;
+							this.$nextTick(function () {
+								this._initswiper();
+							})
+						}else{
+							console.log("banner暂未更新！")
+						}	
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				getOneFun(){
+					var url=window.location.href; 
+					if(url.indexOf("link") >= 0){
+						this.link = window.location.href.split('link=')[1].split("&")[0]
+					}else{
+						this.link=''
+					}
+					
+				},
+				imgPreview(fileDom){
+				    var id = $(fileDom).attr('id');
+				    if(id == 'idcard_front'){
+				        id = 'idcard_i1';
+				    }else{
+				        id = 'idcard_i2';
+				    }
+				    //判断是否支持FileReader
+				    if (window.FileReader) {
+				        var reader = new FileReader();
+				    } else {
+				        alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+				    }
+				    //获取文件
+				    var file = fileDom.files[0];
+				    var imageType = /^image\//;
+				    //是否是图片
+				    if (!imageType.test(file.type)) {
+				        alert("请选择图片！");
+				        return;
+				    }
+				    //读取完成
+				    reader.onload = function(e) {
+				        //获取图片dom
+				        $("#"+id).removeClass('idcard_img');
+				        $("#"+id).addClass('idcard_img1');
+				        $("#"+id).parent().find('p').hide();
+				        var img = document.getElementById(id);
+				        //图片路径设置为读取的图片
+				        img.src = e.target.result;
+				    };
+				    reader.readAsDataURL(file);
+					console.log(file);
+					var formData = new FormData(); 
+					formData.append('file', $('#idcard_front')[0].files[0]); //添加图片信息的参数
+					// formData.append('sizeid',123); //添加其他参数
+					
+					// createAjax({
+					// 	type: 'POST',
+					// 	dataType: 'JSON',
+					// 	url: imageUpload,
+					// 	data: formData,
+					// 	processData:false,
+					// 	contentType: false, 
+					// 	mimeType:"multipart/form-data",
+					// }).success(res => {
+					// 	console.log(res);
+					// 	imgurl = 'http://api.chinabogu.com'+ res.data.filePath;
+					// }).error(err => {
+					// 	console.log(err);
+					// })
+					
+					$.ajax({          
+						url:imageUpload, 
+						dataType:"json",  
+						type:"POST",
+						data:formData,
+						processData:false,
+						contentType: false, 
+						headers:{
+							'uid':localStorage.getItem("user_id")
+						},
+						mimeType:"multipart/form-data",
+						success:function(data){
+							console.log(data);
+							imgurl = 'http://api.chinabogu.com'+ data.data.filePath;
+							layer.msg('上传成功！');
+						},      
+						error:function(err){
+							console.log(err)
+						}
+					});
+				},
+				assessFun(){
+					var ass_url = $(".ass_url").val();
+					var ass_cont = $(".ass_cont").val();
+					// console.log(imgurl)
+					if(imgurl == undefined){
+						layer.msg('请上传图片！');
+					}else if(ass_url ==''){
+						layer.msg('请填写拍品链接！');
+					}else if(ass_cont == ''){
+						layer.msg('请填写描述！');
+					}
+					
+					else{
+						createAjax({
+							type: 'POST',
+							dataType: 'JSON',
+							url: assessUploade,
+							data: {	
+								image:imgurl,
+								user_id:user_id,
+								url:ass_url,
+								appraisal_need:ass_cont,
+								
+							}
+						}).success(res => {
+							console.log(res);
+							if(res.code == "1"){
+								// layer.msg("提交成功！");
+								// 调用支付按钮
+								WeixinJSBridge.invoke(
+								   'getBrandWCPayRequest', {
+										"appId":res.data.appId,     //公众号名称，由商户传入     
+										"timeStamp":res.data.timeStamp,         //时间戳，自1970年以来的秒数     
+										"nonceStr":res.data.nonceStr, //随机串     
+										"package":res.data.package,     
+										"signType":"MD5",         //微信签名方式：     
+										"paySign": res.data.paySign//微信签名 
+									},
+								    function(res){
+										console.log("微信支付返回值:");
+										console.log(res);
+										if (res.err_msg == "get_brand_wcpay_request:ok") {
+											// 使用以上方式判断前端返回,微信团队郑重提示：
+											//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+											alert("get_brand_wcpay_request:ok");
+										}
+										location.reload() 
+										// alert(res.err_msg);
+										// alert(res); // 显示是个 Object
+									}
+								);
+							}else if(res.code == "-1"){
+								layer.msg(res.msg);
+								return false;
+							}
+						}).error(err => {
+							console.log(err);
+						})
+					}
+					
+				}
+			}
 	    })
 	</script>
-	<script>
-		const assessUploade = _Config_.API_PATH + '/api/assessPlatform'//详情
-		const imageUpload = _Config_.API_PATH + '/api/upload' //上传图片
-		// $(document).ready(function () {
-		// 	auciondetailApi()
-		// })
-	    var user_id = localStorage.getItem('user_id');
-		var imgurl;
-	    function imgPreview(fileDom){
-	        var id = $(fileDom).attr('id');
-	        if(id == 'idcard_front'){
-	            id = 'idcard_i1';
-	        }else{
-	            id = 'idcard_i2';
-	        }
-	        //判断是否支持FileReader
-	        if (window.FileReader) {
-	            var reader = new FileReader();
-	        } else {
-	            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
-	        }
-	        //获取文件
-	        var file = fileDom.files[0];
-	        var imageType = /^image\//;
-	        //是否是图片
-	        if (!imageType.test(file.type)) {
-	            alert("请选择图片！");
-	            return;
-	        }
-	        //读取完成
-	        reader.onload = function(e) {
-	            //获取图片dom
-	            $("#"+id).removeClass('idcard_img');
-	            $("#"+id).addClass('idcard_img1');
-	            $("#"+id).parent().find('p').hide();
-	            var img = document.getElementById(id);
-	            //图片路径设置为读取的图片
-	            img.src = e.target.result;
-	        };
-	        reader.readAsDataURL(file);
-			console.log(file);
-			var formData = new FormData(); 
-			formData.append('file', $('#idcard_front')[0].files[0]); //添加图片信息的参数
-			// formData.append('sizeid',123); //添加其他参数
-			
-			// createAjax({
-			// 	type: 'POST',
-			// 	dataType: 'JSON',
-			// 	url: imageUpload,
-			// 	data: formData,
-			// 	processData:false,
-			// 	contentType: false, 
-			// 	mimeType:"multipart/form-data",
-			// }).success(res => {
-			// 	console.log(res);
-			// 	imgurl = 'http://api.chinabogu.com'+ res.data.filePath;
-			// }).error(err => {
-			// 	console.log(err);
-			// })
-			
-			$.ajax({          
-				url:imageUpload, 
-				dataType:"json",  
-				type:"POST",
-				data:formData,
-				processData:false,
-				contentType: false, 
-				headers:{
-					'uid':localStorage.getItem("user_id")
-				},
-				mimeType:"multipart/form-data",
-				success:function(data){
-					console.log(data);
-					imgurl = 'http://api.chinabogu.com'+ data.data.filePath;
-					layer.msg('上传成功！');
-				},      
-				error:function(err){
-					console.log(err)
-				}
-			});
-	    }
-		function assessFun(){
-			var ass_url = $(".ass_url").val();
-			var ass_cont = $(".ass_cont").val();
-			// console.log(imgurl)
-			if(imgurl == undefined){
-				layer.msg('请上传图片！');
-			}else if(ass_url ==''){
-				layer.msg('请填写拍品链接！');
-			}else if(ass_cont == ''){
-				layer.msg('请填写描述！');
-			}
-			
-			else{
-				createAjax({
-					type: 'POST',
-					dataType: 'JSON',
-					url: assessUploade,
-					data: {	
-						image:imgurl,
-						user_id:user_id,
-						url:ass_url,
-						appraisal_need:ass_cont,
-						
-					}
-				}).success(res => {
-					console.log(res);
-					if(res.code == "1"){
-						layer.msg("提交成功！");
-					}else if(res.code == "-1"){
-						layer.msg(res.msg);
-						return false;
-					}
-				}).error(err => {
-					console.log(err);
-				})
-			}
-			
-		}
-	 </script>
 </html>
  

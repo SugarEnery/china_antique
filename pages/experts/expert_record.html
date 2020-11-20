@@ -31,12 +31,13 @@
 		<div class="container" id="container">
 			<div class="expertify_list">
 				<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')">
-					<div class="index_classify_content"><dl>
-					<dt><img :src="details.image"></dt>
-					<dd class="inclassify_title">{{details.name}}</dd>
-					<!-- <dd class="expert_introduce"><i class="iconfont jian_icon">&#xe626;</i>{{details.tag}}</dd> -->
-					<dd  class="expert_content" v-html="details.content">{{details.content}}</dd>
-					</dl>	
+					<div class="index_classify_content">
+					<dl class="experts_content">
+						<dt><img :src="details.image"></dt>
+						<dd class="inclassify_title expertt_title">{{details.name}}</dd>
+						<dd class="expert_introduce"><i class="iconfont jian_icon">&#xe626;</i>{{details.tag}}</dd>
+						<div class="expert_content" v-html="details.content">{{details.content}}</div>
+					</dl>
 				</div>
 			</div>
 			<div class="infor_content">

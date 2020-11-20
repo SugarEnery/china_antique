@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="../../js/swiper-3.4.0.jquery.min.js" ></script>
 		<script src="../../js/config.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-		<title>专家列表</title>
+		<title>专家鉴定</title>
 		<style>
 			body {
 				min-width: 320px;
@@ -30,11 +30,11 @@
 	<body>
 		<div class="container" id="container">
 			<div class="expertify_list">
-				<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')">
+				<div class="swiper-slide swiper-no-swiping" data-id="" @click="expertClick('+json[i].id+')">
 					<div class="index_classify_content">
 						<dl>
 							<dt><img src="../../img/111.jpg"></dt>
-							<dd class="inclassify_title">{{item.name}}</dd>
+							<dd class="inclassify_title">{{name}}</dd>
 							<dd class="expert_introduce"><i class="iconfont jian_icon">&#xe626;</i>玉器</dd>
 						</dl>
 					</div>

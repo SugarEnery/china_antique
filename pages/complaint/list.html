@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,	minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link href="../../comstyle/css/new_dragon.css" type="text/css"  rel="stylesheet"/>
+    <!-- 底部为灰色的公共样式 -->
+    <link href="../../comstyle/css/gray_style.css" type="text/css"  rel="stylesheet"/>
+    <script src="../../comstyle/js/jquery-2.1.1.min.js"></script>
+    <script src="../../comstyle/js/new_dragon.js"></script>
+    <title>投诉</title>
+    <style type="text/css">
+        .advice_zong_title{
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<p class="advice_zong_title">请选择投诉原因</p>
+<div class="advice_one_div">
+    <p class="advice_title">诱导<span><img src="../../comstyle/img/tousu_icon_you.png"></span></p>
+    <div class="advice_select">
+        <p onclick="jump('诱导分享');">诱导分享</p>
+        <p onclick="jump('诱导关注');">诱导关注</p>
+        <p onclick="jump('诱导下载');">诱导下载</p>
+    </div>
+</div>
+
+<div class="advice_one_div">
+    <p class="advice_title" onclick="jump('骚扰');">骚扰</p>
+</div>
+<div class="advice_one_div">
+    <p class="advice_title" >欺诈<span><img src="../../comstyle/img/tousu_icon_you.png"></span></p>
+    <div class="advice_select">
+        <p onclick="jump('多级分销');">多级分销</p>
+        <p onclick="jump('诱导关注');">诱导关注</p>
+    </div>
+</div>
+<div class="advice_one_div">
+    <p class="advice_title" onclick="jump('恶意营销');">恶意营销</p>
+</div>
+<div class="advice_one_div">
+    <p class="advice_title" onclick="jump('其他');">其他</p>
+</div>
+<!-- <div class="temp_bottom"><span><img src="../../comstyle/img/tousu_icon_dianhua_1.png" >投诉电话:&nbsp;&nbsp;</span><a href="tel:010-87777911">010-87777911</a></div> -->
+<script>
+
+    // 个人中心点击展开收起
+    // 收起展开
+    // $(document).ready(function(){
+        var url = window.location.href;//获取整个url
+            console.log(url);
+            url = encodeURI(url);
+            result = url.split("?")[1]; //url地址？后面的值
+            console.log(result)
+            var a=result.split("&");       //将结果用&符分隔
+            var name = a[0].split("=")[1]; //参数值1
+            console.log(name);
+            var redirectUri = encodeURIComponent("https://wjgzh.hczq.com/thousands/pages/complaint/list.html?name="+name);
+            console.log(redirectUri)
+            if(name == "zhitougu"){
+                var appID = "wx68e69e574e468e60";
+            }else{
+                var appID = "wx47c06e0f8067d22a";//hui
+            }
+            console.log(appID);
+            function getUrl(){
+                // var redirectUri = encodeURI(url);
+                var strUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appID + "&redirect_uri=" + redirectUri + "&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
+                // window.location = strUrl;
+                return strUrl;
+            }
+            // console.log(getUrl());
+            function urlResolve () {
+                var url = location.search; //获取url中"?"符后的字符串
+                var theRequest = new Object();    //声明一个对象
+                if(url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for(var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+            var code = urlResolve().code;
+            if(code == undefined ){
+                window.location = getUrl();
+
+            }
+            console.log(code);
+            $("p.advice_title").click(function(){
+                if($(this).next(".advice_select").is(":hidden")){
+                    $(this).next('.advice_select').slideDown('slow').parent().siblings().children(".advice_select").slideUp('slow');
+                    console.log(this);
+                    $(this).find('img').attr('src','../../comstyle/img/tousu_icon_xia.png');
+                }
+                else{
+                    $(this).next('.advice_select').slideUp('slow');
+                    $(this).find('img').attr('src','../../comstyle/img/tousu_icon_you.png');
+
+                }
+            });
+    // });
+        function jump($id)
+        {
+            var id=$id
+            // alert(id)
+            window.location.href="submit.html?name="+name+"&id="+id;
+        }
+
+</script>
+</body>
+</html>

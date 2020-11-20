@@ -23,12 +23,15 @@
 				<dl class="menber_infor">
 					<dt><img :src="headimgurl" /></dt>
 					<dd class="menber_name">{{nickname}}</dd>
-					<dd class="menber_state">暂未开通vip会员</dd>
+					<dd class="menber_state">
+						<span v-if="useris_vip == 1">尊贵的vip会员</span>
+						<span v-else>暂未开通vip会员</span>
+					</dd>
 				</dl>
-				<div class="member_introduce">
-					<h1 class="member_title">神州博古尊享会员 <span>低至￥200/月</span></h1>
+				<div class="member_introduce" >
+					<h1 class="member_title">神州博古尊享会员 <span >低至￥200/月</span></h1>
 					<p class="member_cont">每月可享精选推荐海外古玩
-						<input type="button" value="立即开通" @click="payforVip" />
+						<input type="button" value="立即开通" @click="payforVip" v-show="useris_vip == 0" />
 					</p>
 				</div>
 			</div>
@@ -38,6 +41,7 @@
 		</h1>
 	</body>
 	<script>
+		const personalInfoApi = _Config_.API_PATH + '/api/getPersonalInfo';
 		const payforApi = _Config_.API_PATH + '/api/bugUsersVip';//购买vip
 		var user_id = localStorage.getItem('user_id');
 		var member = new Vue({
@@ -46,11 +50,31 @@
 				return{
 					nickname: localStorage.getItem('nickname'),
 					headimgurl: localStorage.getItem('headimgurl'),
+					userInfor:'',
+					useris_vip:'',
 				}
 			},
 			mounted(){
+				this.personalInfoFun();
 			},
 			methods:{
+				personalInfoFun(){
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: personalInfoApi,
+						data: {	
+							user_id:user_id,
+						}
+					}).success(res => {
+						console.log(res);
+						this.useris_vip = res.data.is_vip;
+						
+						
+					}).error(err => {
+						console.log(err);
+					})
+				},
 				payforVip(){
 					// VIP
 					createAjax({

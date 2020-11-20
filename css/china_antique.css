@@ -38,7 +38,6 @@ html, body {
 }
 .index_div .swiper-container {
 	width: 100%;
-	height: 300px;
 }
 
 .index_div .swiper-slide {
@@ -121,7 +120,7 @@ html, body {
 	font-size: .24rem;
 	padding:.05rem  .1rem;
 	border:#999999 solid 1px;
-	margin-left: .1rem;
+	margin-right: .1rem;
 	border-radius: .1rem;
 	
 }
@@ -133,6 +132,41 @@ html, body {
 	overflow: hidden;
 	padding-bottom:1.5rem;
 }
+
+/* 首页里 */
+.index_classify_contentt{
+	width: 100%;
+	margin: auto;
+	overflow: hidden;
+}
+.index_classify_contentt dl{
+	width: 100%;
+	overflow: hidden;
+	margin-top: .2rem;
+}
+.index_classify_contentt dl dt{
+	float: left;
+	width: 30%;
+	height: 2rem;
+}
+.index_classify_contentt dl dt img{
+	width: 100%;
+	margin: auto;
+	height: 2rem;
+}
+.index_classify_contentt dl dd{
+	float: left;
+	width: 69%;
+	color: #666666;
+	padding-left: .2rem;
+	margin-top: .1rem;
+}
+.inclassify_titles{
+	margin-top: .1rem;
+	position: relative;
+	font-weight: bold;
+}
+/* 专家列表里 */
 .index_classify_content{
 	width: 100%;
 	margin: auto;
@@ -157,19 +191,24 @@ html, body {
 	width: 69%;
 	color: #666666;
 	padding-left: .2rem;
-	margin-top: .3rem;
+	/* margin-top: .3rem; */
 }
+
 .inclassify_title{
-	margin-top: .2rem;
+	/* margin-top: .2rem; */
+	font-weight: bold;
+	
 	position: relative;
 }
 .inclassify_time{
 	margin-top: .3rem;
 }
-
 /* 专家列表 */
 .expert_list{
 	margin: 0 .2rem;
+}
+.expertt_title{
+	margin-top: .3rem;
 }
 .expert_introduce{
 	margin-top: .3rem;
@@ -184,6 +223,12 @@ html, body {
 .expert_content{
 	margin-top: .2rem;
 	line-height: .4rem;
+	clear: both;
+	margin-top: .3rem;
+	font-size: .32rem;
+	padding-top: .3rem;
+	text-indent: .6rem;
+	color: #666666;
 }
 .expert_ul li{
 	float: left;
@@ -191,12 +236,23 @@ html, body {
 	/* text-align: center; */
 	margin:.3rem 0;
 }
+/* record */
+dl.experts_content dd{
+	float: left;
+	width: 65%;
+	color: #666666;
+	padding-left: .2rem;
+	/* margin-top: .3rem; */
+}
+.experts_content dd{
+	margin-left: .2rem;
+}
 /* 资讯列表 */
 .infor_div{
 	overflow: hidden;
 }
 .infor_banner{
-	width: ;
+	overflow: hidden;
 }
 .infor_banner img{
 	width: 100%;
@@ -218,6 +274,20 @@ html, body {
 	width: 95%;
 	margin: auto;
 	
+}
+.infor_detailbanner{
+	position: relative;
+}
+.state_red{
+	background: rgba(194,57,75,1);
+	padding: .2rem .2rem;
+	position: absolute;
+	bottom: 0;
+	z-index: 100;
+	width: 100%;
+	color: #fff;
+	font-size: .28rem;
+	font-weight: bold;
 }
 .infor_content_title{
 	font-size: .28rem;
@@ -255,17 +325,25 @@ html, body {
 
 /* 专家列表 */
 .container {
-	/*width: 100%;*/
-	/* border: 1px solid #ccc; */
-	overflow: hidden;
+	overflow: auto;
+	clear: both;
+	margin: auto;
 }
-/* .expertify_list{
+.containerBottom{
+	overflow: hidden;
+	min-height: 100%;
+	padding-bottom: 2rem;
+}
+.expertify_list{
 	width: 95%;
 	margin: auto;
 	overflow:hidden;
-} */
+	border-bottom: #CCCCCC solid 1px;
+}
 .swiper1 {
 	width: 100%;
+	margin-left: .2rem;
+	
 }
 .swiper1 .selected {
 	color: #ec5566;
@@ -306,7 +384,15 @@ html, body {
 .infor_content{
 	width: 95%;
 	margin: auto;
-	padding:.3rem 0;
+	padding:0 0 .3rem 0;
+}
+.infor_personal{
+	float: right;
+}
+.infor_personal img{
+	width: 30%;
+	border-radius: 50%;
+	float: right;
 }
 .infor_title{
 	padding-top:.3rem;
@@ -345,10 +431,17 @@ html, body {
 	color: #666666;
 	
 }
+.infor_updetail{
+	overflow: hidden;
+	margin-bottom: 1rem;
+}
 .infor_updetail p{
 	font-size: .28rem;
 	color: #999999;
 	line-height: .5rem;
+}
+.infor_updetail img{
+	width: 100%;
 }
 .infor_footer{
 	position: fixed;
@@ -432,6 +525,7 @@ html, body {
 	border:#CCCCCC solid 1px;
 	padding:.05rem .1rem;
 	border-radius: .1rem;
+	cursor: pointer;
 	
 }
 /* 拍卖 */
@@ -562,7 +656,7 @@ i.logistics_copy {
 	overflow: hidden;
 }
 .auctiond_money{
-	width: 30%;
+	width: 35%;
 	overflow: hidden;
 	display: block;
 	float: left;
@@ -591,10 +685,21 @@ i.logistics_copy {
 	margin-top: .1rem;
 }
 .auction_updetail{
-	margin-bottom: .5rem;
+	margin-bottom: 2.5rem;
 	overflow: hidden;
 	background-color: #F5F5F5;
-	min-height: 5rem;
+	
+}
+.auction_slide{
+	height: 4rem;
+	overflow: hidden;
+}
+.auction_content{
+	margin-top: .5rem;
+}
+.auction_content img{
+	width: 80%;
+	margin-top: .5rem;
 }
 .auction_updetail dl{
 	overflow: hidden;
@@ -648,6 +753,10 @@ i.logistics_copy {
 	color: #999999;
 	font-size: .24rem;
 	
+}
+.selecteBtn{
+	overflow: hidden;
+	text-align: center;
 }
 /* 鉴定详情 */
 .assess_div{
@@ -726,7 +835,7 @@ i.logistics_copy {
 }
 .person_icontop{
 	overflow: hidden;
-	padding: .3rem 0;;
+	padding: .3rem 0;
 	border-bottom: #DDDDDD solid 1px;
 	background-color: #FFFFFF;
 }
@@ -746,6 +855,25 @@ i.logistics_copy {
 	border-bottom: #EEEEEE solid 1px;
 	overflow: hidden;
 	padding: .2rem 0;
+}
+/* 个人信息 */
+.modify_the{
+	width: 100%;
+	background-color: #CCCCCC;
+	padding:.25rem 0;
+}
+.information_input{
+	float: right;
+	background-color: #EEEEEE;
+	padding:.1rem .1rem;
+}
+.information_input::placeholder {
+	/* font-size: 12px;
+	font-family: Arial;
+	letter-spacing: 5px;
+	color: red !important;
+	text-align: center; */
+	padding:.1rem .1rem;
 }
 /* 鉴定评估上传 */
 .assess_banner img{
@@ -898,6 +1026,11 @@ input.file-style{
 	float: right;
 	color: #FF0000;
 }
+.seemorelink{
+	color: #666666;
+	padding: .2rem 0;
+	display: none;
+}
 /* 专家鉴定记录 */
 .expert_centen_name{
 	padding:.2rem 0;
@@ -1042,6 +1175,7 @@ input.file-style{
 	padding:10px 0;
 	border-radius: 25px;
 	margin-top:10%;
+	
 }
 /* 结束 */
 .feedback_div{
@@ -1051,7 +1185,7 @@ input.file-style{
 }
 p.feedback_div_title{
 	display: block;
-	padding: 0 0 .2rem .2rem;
+	padding: 0 0 .2rem .3rem;
 	color:#333333;
 }
 .feedback_input{
@@ -1064,6 +1198,7 @@ p.feedback_div_title{
 	border-radius: 5px;
 	font-size: 14px;
 	color: #333333;
+	margin-left: .3rem;
 	
 }
 /* 五角星样式 */
@@ -1113,6 +1248,9 @@ li.hs,.cs{color:#f00;}/*五角星点击后样式*/
 	float: left;
 	width: 60%;
 }
+.menber_state span{
+	color: #EEEEEE;
+}
 .menber_name{
 	font-size: .28rem;
 	color: #ffda04;
@@ -1153,4 +1291,62 @@ li.hs,.cs{color:#f00;}/*五角星点击后样式*/
 	
 }
 
+/* 投诉建议新 */
+.advice_one_div{
+	background: #FFFFFF;
+	overflow: hidden;
+	width: 95%;
+	margin:.5rem auto;
+	border-radius: 8px;
+}
+.advice_title{
+	padding:1rem;
+}
+.advice_title span{
+	float: right;	
+}
+.advice_title span img{
+	width:70%;	
+}
+.advice_select{
+	display: none;
+}
+.advice_select p{
+	border-top:#EDEDED solid 1px;
+	padding:.3rem;
+	font-size: 14px;
+	
+} 
+.advice_zong_title{
+	font-size: 12px;
+	padding:1rem 0 0 1rem;
+	color:#929292;
+}
+.feedback_div label{
+	display: block;
+	padding:.3rem 0;
+	margin:.2rem .3rem 0 .3rem;
+}
+.feedback_div label span{
+	display: inline-block;
+	/* width: 2rem; */
+	text-align: justify;
+	text-align-last: justify;
+}
+.feedback_div label input{
+	padding:.1rem 0;
+	border: 0;
+	border-radius: 0;
+	border-bottom: #666666 solid 1px ;
+}
 
+.feedback_title{
+	/*text-align: center;*/
+	background: #FFFFFF;
+	padding:.3rem .3rem;
+	line-height: 30px;
+	color:#333333;
+	font-weight: bold;
+	font-size: .32rem;
+}
+.feedback_div{

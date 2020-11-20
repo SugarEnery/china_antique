@@ -6,7 +6,6 @@ var _Config_ = {
 var Router= "http://api.chinabogu.com";
 // 本地地址
 // var Router = "http://192.168.23.123:8000/";
-//ajax
 function createAjax(ajaxrequire) {
 	// console.log(ajaxrequire);
  	_url = ajaxrequire.url;

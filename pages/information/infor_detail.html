@@ -18,53 +18,54 @@
 		<title>资讯详情</title>
 	</head>
 	<body>
-		<!-- banner -->
-		<div  class="index_div">
-			<!-- Swiper -->
-			<div class="swiper-container">
-				<div class="swiper-wrapper banner_list">
-				  <!-- <div class="swiper-slide"><img src="../../img/banner01.png"></div>
-				  <div class="swiper-slide"><img src="../../img/banner02.png"></div>
-				  <div class="swiper-slide"><img src="../../img/banner03.png"></div> -->
+		<div id="infor_detail">
+			<!-- banner -->
+			<div  class="index_div infor_detailbanner">
+				<!-- Swiper -->
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+					  <div class="swiper-slide"><img :src="details.images"></div>
+					</div>
+					<!-- Add Pagination -->
+					<div class="swiper-pagination"></div>
 				</div>
-				<!-- Add Pagination -->
-				<div class="swiper-pagination"></div>
+				<p class="state_red">正在进行  {{details.dismount_time}} 结束</p>
+				<!-- Swiper JS -->
+				<script src="../../js/swiper.min.js" type="text/javascript"></script>
+				<!-- Initialize Swiper -->
+				<script>
+				var swiper = new Swiper('.swiper-container', {
+				  pagination: {
+					el: '.swiper-pagination',
+				  },
+				});
+				</script>
 			</div>
-			<!-- Swiper JS -->
-			<script src="../../js/swiper.min.js" type="text/javascript"></script>
-			<!-- Initialize Swiper -->
-			<script>
-			var swiper = new Swiper('.swiper-container', {
-			  pagination: {
-				el: '.swiper-pagination',
-			  },
-			});
-			</script>
-		</div>
-		<div  id="infor_detail">
-		<div class="infor_content">
-			<p class="infor_title">{{details.name}}</p>
-			<p class="infor_mess">
-				<span class="infor_time">结束时间：{{details.created_time}}
-				</span>
-				<!-- <span class="infor_seedetail">查看详情</span> -->
-			</p>
-
-			<h1 class="center_img"><img src="../../img/banner01.png"></h1>
-			<p class="infor_uptitle">拍品展示</p>
-			<div class="infor_updetail">
+		
+			<div class="infor_content">
+				<p class="infor_title">{{details.name}}</p>
+				<p class="infor_mess">
+					<span class="infor_time">结束时间：{{details.created_time}}
+					</span>
+					<span class="infor_seedetail" v-show="link !=''" @click="getSeemoreFun()">查看链接</span>
+				</p>
+				<p class="seemorelink">{{link}}</p>
+				<h1 class="center_img"><img src="../../img/banner01.png"></h1>
+				<p class="infor_uptitle">拍品展示</p>
+				<div class="infor_updetail">
+				</div>
 			</div>
-		</div>
-		<footer class="infor_footer">
-			<span class="colect_btn" @click="colectFun()">收藏</span>
-			<span class="assess_btns" @click="assessFun()">鉴定评估</span>
-		</footer>
+			<footer class="infor_footer">
+				<span class="colect_btn" @click="colectFun()">收藏</span>
+				<span class="assess_btns" @click="assessFun()">鉴定评估</span>
+			</footer>
 		</div>
 	</body>
 	<script>
 		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
 		const infordetail = _Config_.API_PATH + '/api/getRealDetail'//广告列表
 		const colectinfo = _Config_.API_PATH + '/api/addCollection'//收藏
+		var useris_vip = localStorage.getItem('useris_vip');
 		function GetUrlParam(paraName) {
 			var url = document.location.toString();
 			var arrObj = url.split("?");
@@ -91,9 +92,10 @@
 		    el:"#infor_detail",
 		    data:function() {
 				return{
-					details:{}
+					details:{},
+					link:'',
 				}
-		    },    
+		    },
 			mounted(){
 				this.infordetailApi();
 			},
@@ -110,7 +112,10 @@
 						}
 					}).success(res => {
 						console.log(res);
-						this.details = res.data
+						this.details = res.data;
+						if(res.data.link){
+							this.link = res.data.link;
+						}
 						if(res.data){
 							$(".infor_updetail").html(res.data.images_detail)
 							
@@ -140,7 +145,22 @@
 					})
 				},
 				assessFun(){
-					window.location.href='../assess/assess_uplade.html'
+					if(this.link){
+						window.location.href='../assess/assess_uplade.html?link='+this.link+'&';
+					}else{
+						window.location.href='../assess/assess_uplade.html'
+					}
+					
+					
+				},
+				getSeemoreFun(){
+					console.log(useris_vip)
+					if(useris_vip == 1){
+						$(".seemorelink").show();
+					}else{
+						window.location.href='../personal/member.html'
+					}
+					
 				}
 				
 				

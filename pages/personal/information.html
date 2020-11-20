@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>个人中心</title>
+		<title>个人信息</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 		<link href="../../css/publicStyle.css" rel="stylesheet" />
 		<link href="../../css/china_antique.css" rel="stylesheet" />
@@ -29,53 +29,33 @@
 		</style>
 	</head>
 	<body>
-		<div id="personal">
-			<dl class="person_infor">
-				<dt><img :src="headimgurl"></dt>
-				<dd class="person_name">{{nickname}}</dd>
-				<dd class="person_state">
-					<span v-if="useris_vip == 1">尊贵的vip会员</span>
-					<span v-else>暂未开通vip会员</span>
-				</dd>
-			</dl>
-			<ul class="person_icontop">
-				<a href="collection.html">
-					<li><i class="iconfont person_iconcss" >&#xe65e;</i><br/>收藏夹</li>
-				</a>
-				<a href="member.html">
-				<li><i class="iconfont person_iconcss">&#xe601;</i><br/>会员</li>
-				</a>
-				<li><i class="iconfont person_iconcss">&#xe651;</i><br/>服务</li>
-			</ul>
-			
+		<div id="information">
 			<ul class="person_navlist">
 				<a href="expert_list.html">
-					<li><i class="iconfont person_navlist" >&#xe617;</i>鉴定订单</li>
+					<li>头像 <span class="infor_personal"><img :src="userInfor.headimgurl" /></span></li>
 				</a>
 				<a href="auction_list.html">
-					<li><i class="iconfont person_navlist">&#xe60e;</i>我的拍卖</li>
+					<li>昵称<span class="infor_personal">{{userInfor.nickname}}</span></li>
 				</a>
-				<a href="information.html">
-				<li><i class="iconfont person_navlist">&#xe6ae;</i>个人信息</li>
-				</a>
-				<li><i class="iconfont person_navlist">&#xe60d;</i>关于我们</li>
+				<li>手机<span class="infor_personal">{{userInfor.mobile}}</span></li>
+				<li>收货地址
+				<span class="infor_personal">
+					{{userInfor.address}}
+				</span>
+				</li>
 				<a href="../complaint/submit.html">
-					<li><i class="iconfont person_navlist">&#xe619;</i>意见反馈</li>
+					<li>联系我们</li>
 				</a>
 			</ul>
-			<van-tabbar v-model="active" route >
-			  <van-tabbar-item name="home" icon="home-o" url="../index.html">首页</van-tabbar-item>
-			  <van-tabbar-item name="category" icon="search" url="personal.html">个人</van-tabbar-item>
-			</van-tabbar>
+			<input type="button" value="修改信息" class="modify_the" @click="modify_theInfor()"/>
 		</div>
 	</body>
 	<script>
 		const personalInfoApi = _Config_.API_PATH + '/api/getPersonalInfo';
 		var user_id = localStorage.getItem('user_id');
 		var personal = new Vue({
-		  el: '#personal',
+		  el: '#information',
 		  data: {
-			active: 'home',
 		    nickname: localStorage.getItem('nickname'),
 			headimgurl:localStorage.getItem('headimgurl'),
 			userInfor:'',
@@ -95,12 +75,16 @@
 					}
 				}).success(res => {
 					console.log(res);
+					this.userInfor = res.data
 					this.useris_vip = res.data.is_vip
 					
 					
 				}).error(err => {
 					console.log(err);
 				})
+			},
+			modify_theInfor(){
+				window.location.href='modifyInfor.html'
 			}
 		  }
 		})
