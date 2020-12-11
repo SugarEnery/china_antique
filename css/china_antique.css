@@ -235,6 +235,7 @@ html, body {
 	width: 33%;
 	/* text-align: center; */
 	margin:.3rem 0;
+	color: #666666;
 }
 /* record */
 dl.experts_content dd{
@@ -269,12 +270,13 @@ dl.experts_content dd{
 	font-size: .28rem;
 	text-align: center;
 }
-.infor_content{
+/* .infor_content{
 	clear: both;
 	width: 95%;
 	margin: auto;
+	margin-top: .3rem;
 	
-}
+} */
 .infor_detailbanner{
 	position: relative;
 }
@@ -288,6 +290,7 @@ dl.experts_content dd{
 	color: #fff;
 	font-size: .28rem;
 	font-weight: bold;
+	display: none;
 }
 .infor_content_title{
 	font-size: .28rem;
@@ -342,7 +345,7 @@ dl.experts_content dd{
 }
 .swiper1 {
 	width: 100%;
-	margin-left: .2rem;
+	/* margin-left: .2rem; */
 	
 }
 .swiper1 .selected {
@@ -384,7 +387,7 @@ dl.experts_content dd{
 .infor_content{
 	width: 95%;
 	margin: auto;
-	padding:0 0 .3rem 0;
+	padding:.3rem 0 .3rem 0;
 }
 .infor_personal{
 	float: right;
@@ -395,7 +398,7 @@ dl.experts_content dd{
 	float: right;
 }
 .infor_title{
-	padding-top:.3rem;
+	/* padding-top:.3rem; */
 } 
 .infor_mess{
 	font-size: .24rem;
@@ -691,11 +694,12 @@ i.logistics_copy {
 	
 }
 .auction_slide{
-	height: 4rem;
+	max-height: 4rem;
 	overflow: hidden;
 }
 .auction_content{
 	margin-top: .5rem;
+	padding:.3rem 0;
 }
 .auction_content img{
 	width: 80%;
@@ -1053,6 +1057,11 @@ input.file-style{
 }
 
 /*图片上传*/
+.imgUpload_content{
+	width: 100%;
+	margin: auto;
+	padding:.3rem 0 .3rem 0;
+}
 .feed_add_images{
 	background: #FFFFFF;
 	/* margin-top:1rem; */
@@ -1185,12 +1194,12 @@ input.file-style{
 }
 p.feedback_div_title{
 	display: block;
-	padding: 0 0 .2rem .3rem;
+	padding: 0 0 .2rem 0rem;
 	color:#333333;
 }
 .feedback_input{
 	background: #EEEEEE;
-	width:95%;
+	width:100%;
 	margin:auto;
 	display:block;
 	height:2rem;
@@ -1198,9 +1207,10 @@ p.feedback_div_title{
 	border-radius: 5px;
 	font-size: 14px;
 	color: #333333;
-	margin-left: .3rem;
+	/* margin-left: .3rem; */
 	
 }
+
 /* 五角星样式 */
 .cleanfloat{
 	overflow: hidden;
@@ -1350,3 +1360,8 @@ li.hs,.cs{color:#f00;}/*五角星点击后样式*/
 	font-size: .32rem;
 }
 .feedback_div{
+}
+/* 复制 */
+.copy_write{
+	clear: both;
+}

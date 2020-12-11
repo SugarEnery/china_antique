@@ -333,20 +333,17 @@
 								document.getElementById("loading").style.display = "none";	
 							}else{
 								for(var i=0;i<json.length;i++){
-									console.log(11111111111111)
 									html += '<div class="swiper-slide swiper-no-swiping"><div class="index_classify_contentt"><dl data-id="'+json[i].id+'"><dt><img src="'+json[i].images+'"></dt><dd class="inclassify_titles">'+json[i].name+'<span class="recommend_num"><ul class="cleanfloat">';
 									for(j = 0;j<json[i].recommend_num;j++){
 										html += '<li class="hs">&#9733;</li>';
 									}
 									// console.log(html)
 									html += '</ul></span></dd><dd class="expert_introduce">'+json[i].created_time+'</dd><dd class="expert_introduce">'+json[i].source_name+'</dd></dl></div>';
-									
-									$(".inforify_list").append(html);
-									document.getElementById("loading").style.display = "none";	
+									// console.log(html)
+									$(".inforify_list").html(html);
 								}
-							}
-							
-							// 推荐指数
+								document.getElementById("loading").style.display = "none";
+							} 
 						}).error(err => {
 							console.log(err);
 						})

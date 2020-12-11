@@ -34,10 +34,6 @@
 						<!-- 分页器 -->
 						<div class="swiper-pagination paging" >
 						</div>
-						
-						<!-- 如果需要导航按钮 -->
-						<!-- <div class="swiper-button-prev"></div>
-						<div class="swiper-button-next"></div> -->
 					</div>
 				</div>
 				<ul class="infor_ul">
@@ -47,18 +43,21 @@
 				</ul>
 				<div class="grade-eject">
 				    <ul class="Sort-Sort" id="Sort-Sort">
-				        <li @click="grade(this)" value="1">从早到晚</li>
-				        <li @click="grade(this)" value="2">从晚到早</li>
+						<li :class="activeClass == index ? 'active':''" @click="grade(item.id,index)" v-for="(item,index) in timeList" :value="item.id">{{item.name}}</li>
+				        <!-- <li @click="grade(1,0)" value="1">从早到晚</li>
+				        <li @click="grade(2,1)" value="2">从晚到早</li> -->
 				    </ul>
 				</div>
 				<div class="Sort-eject Sort-height">
 				    <ul class="Sort-Sort Sort_class" id="Sort-Sort">
+						<li :class="activeClass == index ? 'active':''" @click="Sorts(item.id,index)" v-for="(item,index) in typeList" :value="item.id">{{item.name}}</li>
 				    </ul>
 				</div>
 				<div class="Category-eject">
 				    <ul class="Sort-Sort" id="Sort-Sort">
-				        <li @click="Categorytw(this)" value="1">从低到高</li>
-				        <li @click="Categorytw(this)" value="2">从高到底</li>
+						<li :class="activeClass == index ? 'active':''" @click="Categorytw(item.id,index)" v-for="(item,index) in sortList" :value="item.id">{{item.name}}</li>
+				        <!-- <li @click="Categorytw(1,0)" value="1">从低到高</li>
+				        <li @click="Categorytw(2,1)" value="2">从高到底</li> -->
 				    </ul>
 				</div>
 				<div class="infor_content">
@@ -80,9 +79,35 @@
 		    el:"#Vue",
 		    data:function() {
 				return{
+					activeClass: -1, // 0为默认选择第一个，-1为不选择
 					details:{},
 					link:'',
-					bannerList:[],  
+					bannerList:[],
+					typeList:[],
+					timeList:[
+						{
+							id:1,
+							name:"从早到晚",
+						},
+						{
+							id:2,
+							name:"从晚到早",
+						}
+					],
+					sortList:[
+						{
+							id:1,
+							name:'从低到高'
+						},
+						{
+							id:2,
+							name:'从高到底'
+							
+						}
+					],
+					type:"",
+					order:'',
+					recommend:''
 				}
 		    },
 			mounted(){
@@ -113,9 +138,6 @@
 							this.$nextTick(function () {
 								this._initswiper();
 							})
-							// for(var i=0;i<res.data.length;i++){
-							// 	$(".banner_list").append('<div class="swiper-slide"><img src="'+res.data[i].image+'"></div>');
-							// }	
 						}else{
 							console.log("banner暂未更新！")
 						}	
@@ -133,17 +155,26 @@
 					}).success(res => {
 						// console.log('列表',res);
 						var json = res.data;
-						for(var i=0;i<json.length;i++){
-							$(".Sort_class").append('<li onclick="Sorts(this)" value="'+json[i].id+'">'+json[i].name+'</li>')
-						}
+						this.typeList = res.data;
 					}).error(err => {
 						console.log(err);
 					})
 				},
 				inforApi() {
-					var recommend;
-					var type;
-					var order;
+					if(this.order){
+						order = this.order
+					}
+					if(this.type){
+						type= this.type;
+					}
+					if(this.recommend){
+						recommend = this.recommend
+					}
+					else{
+						var type;
+						var recommend;
+						var order;
+					}
 					var limit = 20;
 					var page = 1;
 					createAjax({
@@ -186,20 +217,35 @@
 					}
 				},
 				//js点击事件监听开始
-				Sorts(sbj){
+				// 排序
+				grade(sbj,thisclick){
 				    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
 				    for (var i = 0; i < arr.length; i++){
 				        var a = arr[i];
-				        a.style.borderBottom = "";
+				        // a.style.borderBottom = "";
 				    };
-				    sbj.style.borderBottom = "solid 1px #ff7c08";
-					$(sbj).siblings().css("border-bottom","solid 1px #ffffff");
-					console.log(sbj.value);
+				    this.activeClass = thisclick;  // 把当前点击元素的index，赋值给activeClass
+					this.order = sbj;
+					console.log(this.order)
+					if(sbj){
+						$('.grade-eject').removeClass('grade-w-roll');
+						this.inforApi();
+					}
+				},
+				// 类别
+				Sorts(sbj,thisclick){
+				    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
+				    for (var i = 0; i < arr.length; i++){
+				        var a = arr[i];
+				        // a.style.borderBottom = "";
+				    };
+					// console.log(thisclick);
+					this.activeClass = thisclick;  
 					// 分类
-					type = sbj.value
-					if(sbj.value){
+					this.type = sbj
+					if(sbj){
 						$('.Sort-eject').removeClass('grade-w-roll');
-						inforApi();
+						this.inforApi();
 					}
 				},
 				// $("body").click(function(){
@@ -207,35 +253,18 @@
 				// 	$('.grade-eject').removeClass('grade-w-roll');
 				// 	$('.Category-eject').removeClass('grade-w-roll');
 				// })
-				grade(sbj){
+				
+				Categorytw(sbj,thisclick){
 				    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
 				    for (var i = 0; i < arr.length; i++){
 				        var a = arr[i];
-				        a.style.borderBottom = "";
+				        // a.style.borderBottom = "";
 				    };
-				    sbj.style.borderBottom = "solid 1px #ff7c08";
-					$(sbj).siblings().css("border-bottom","solid 1px #ffffff");
-					console.log(sbj.value);
-					// 排序
-					order = sbj.value
-					if(sbj.value){
-						$('.grade-eject').removeClass('grade-w-roll');
-						inforApi();
-					}
-				},
-				Categorytw(sbj){
-				    var arr = document.getElementById("Sort-Sort").getElementsByTagName("li");
-				    for (var i = 0; i < arr.length; i++){
-				        var a = arr[i];
-				        a.style.borderBottom = "";
-				    };
-				    sbj.style.borderBottom = "solid 1px #ff7c08";
-					console.log(sbj.value);
-					// 推荐指数
-					recommend = sbj.value
-					if(sbj.value){
+				    this.activeClass = thisclick;  // 把当前点击元素的index，赋值给activeClass
+					this.recommend = sbj;
+					if(sbj){
 						$('.Category-eject').removeClass('grade-w-roll');
-						inforApi();
+						this.inforApi();
 					}
 				},
 				//Sort开始

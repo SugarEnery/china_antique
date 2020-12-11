@@ -110,7 +110,9 @@ top: 3.8rem;
 .Sort-height{
     height: 343px;
 }
-
+.Sort-Sort>li.active {
+	border-bottom:solid 1px #ff7c08
+}
 /* demo-content */
 .demo-content{padding-top: 3rem;}
 

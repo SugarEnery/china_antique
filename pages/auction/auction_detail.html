@@ -55,7 +55,7 @@
 				<p class="infor_uptitle">出价记录</p>
 				<div class="auction_updetail">
 					<div class="auction_slide">
-						<dl  v-for="(item, index) in infoLIst" :key="item.id" v-if="infoLIst.length > 3" >
+						<dl  v-for="(item, index) in infoLIst" :key="item.id" v-if="infoLIst.length > 0" >
 							<dt><img :src="item.headimgurl"></dt>
 							<dd class="actionup_title">
 								<span class="actionup_name">{{item.nickname}}</span>

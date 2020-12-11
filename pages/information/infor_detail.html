@@ -47,14 +47,23 @@
 				<p class="infor_mess">
 					<span class="infor_time">结束时间：{{details.created_time}}
 					</span>
-					<span class="infor_seedetail" v-show="link !=''" @click="getSeemoreFun()">查看链接</span>
+					<span class="infor_seedetail" @click="getSeemoreFun()">查看链接</span>
 				</p>
-				<p class="seemorelink">{{link}}</p>
-				<h1 class="center_img"><img src="../../img/banner01.png"></h1>
-				<p class="infor_uptitle">拍品展示</p>
+				<div class="seemorelink">
+					<textarea cols="20" rows="1" id="copy_link" style="opacity: 0;display: block;">{{link}}</textarea>
+					<input type="button" @Click="copyUrl2()" :value="link" class="copy_write" />
+					<i class="iconfont" @Click="copyUrl2()">&#xe648;</i>
+				</div>
+				
+			</div>
+			<h1 class="center_img"><img src="../../img/banner01.png"></h1>
+			
+			<div class="infor_content">
+				<p class="infor_uptitle">拍品详情</p>
 				<div class="infor_updetail">
 				</div>
 			</div>
+			
 			<footer class="infor_footer">
 				<span class="colect_btn" @click="colectFun()">收藏</span>
 				<span class="assess_btns" @click="assessFun()">鉴定评估</span>
@@ -150,8 +159,6 @@
 					}else{
 						window.location.href='../assess/assess_uplade.html'
 					}
-					
-					
 				},
 				getSeemoreFun(){
 					console.log(useris_vip)
@@ -161,12 +168,16 @@
 						window.location.href='../personal/member.html'
 					}
 					
+				},
+				// 一键复制代码
+				copyUrl2(){
+					var Url2 = document.getElementById("copy_link");
+					Url2.select(); // 选择对象
+					document.execCommand("Copy"); // 执行浏览器复制命令
+					layer.msg("已复制好，可贴粘。");
 				}
-				
-				
 			},
 		})
-		
 		
 	</script>
 </html>
