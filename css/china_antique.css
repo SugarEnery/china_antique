@@ -399,6 +399,7 @@ dl.experts_content dd{
 }
 .infor_title{
 	/* padding-top:.3rem; */
+	font-weight: 600;
 } 
 .infor_mess{
 	font-size: .24rem;
