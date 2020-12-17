@@ -11,59 +11,71 @@
 		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
+		<script src="../../js/layer.js" type="text/javascript"></script>
 		<script src="../../js/config.js"></script>
-		<!-- 生产环境版本，优化了尺寸和速度 -->
-		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-		<script src="../../js/layer.js"></script>
+		<script src="../../js/swiper.min.js" type="text/javascript"></script>
+		<!-- <script src="../js/swiper-3.4.0.jquery.min.js" type="text/javascript"></script> -->
+		<link rel="stylesheet" href="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/index.css">
+		<!-- 引入 Vue 和 Vant 的 JS 文件 -->
+		<script src="https://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js"></script>
+		<script src="http://cdn.suoluomei.com/common/js2.0/axios/axios.min.js"></script>
+		<script src="https://cdn.suoluomei.com/common/js2.0/vue/v2.5.16/vue.js"></script>
+		<script src="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/vant.min.js"></script>
+		<!-- <script>Vue.config.productionTip = false</script> -->
+		<script src="../../js/vconsole.min.js"></script>
+		<!-- 页面调试 -->
+		<script>
+			// var vConsole = new VConsole();// 初始化
+		</script>
 		<title>资讯详情</title>
 	</head>
 	<body>
 		<div id="infor_detail">
-			<!-- banner -->
-			<div  class="index_div infor_detailbanner">
+			<!-- bbanner -->
+			<div class="index_div infor_detailbanner">
 				<!-- Swiper -->
 				<div class="swiper-container">
 					<div class="swiper-wrapper">
-					  <div class="swiper-slide"><img :src="details.images"></div>
+						<div class="swiper-slide"><img :src="details.images"></div>
 					</div>
 					<!-- Add Pagination -->
 					<div class="swiper-pagination"></div>
 				</div>
-				<p class="state_red">正在进行  {{details.dismount_time}} 结束</p>
-				<!-- Swiper JS -->
-				<script src="../../js/swiper.min.js" type="text/javascript"></script>
-				<!-- Initialize Swiper -->
-				<script>
-				var swiper = new Swiper('.swiper-container', {
-				  pagination: {
-					el: '.swiper-pagination',
-				  },
-				});
-				</script>
+				<p class="state_red">正在进行 {{details.dismount_time}} 结束</p>
 			</div>
-		
 			<div class="infor_content">
 				<p class="infor_title">{{details.name}}</p>
 				<p class="infor_mess">
 					<span class="infor_time">结束时间：{{details.created_time}}
 					</span>
-					<span class="infor_seedetail" @click="getSeemoreFun()">查看链接</span>
+					<!-- ActionSheet 上拉菜单选择支付 -->
+					<!-- <div id="action_sheet"> -->
+						<span class="infor_seedetail" 
+							v-show="useris_vip != 1" 
+							@click="alertMenu()"
+						>查看链接</span>
+						<!-- <van-button type="button" @click="alertMenu" class="infor_seedetail">查看链接</van-button> -->
+						<van-action-sheet v-model="show" :actions="actions" cancel-text="取消" round @cancel="toCancel" @select="onSelect" />
+
+					<!-- </div> -->
+					
 				</p>
 				<div class="seemorelink">
 					<textarea cols="20" rows="1" id="copy_link" style="opacity: 0;display: block;">{{link}}</textarea>
 					<input type="button" @Click="copyUrl2()" :value="link" class="copy_write" />
 					<i class="iconfont" @Click="copyUrl2()">&#xe648;</i>
 				</div>
-				
 			</div>
+
+
 			<h1 class="center_img"><img src="../../img/banner01.png"></h1>
-			
+
 			<div class="infor_content">
 				<p class="infor_uptitle">拍品详情</p>
 				<div class="infor_updetail">
 				</div>
 			</div>
-			
+
 			<footer class="infor_footer">
 				<span class="colect_btn" @click="colectFun()">收藏</span>
 				<span class="assess_btns" @click="assessFun()">鉴定评估</span>
@@ -72,9 +84,10 @@
 	</body>
 	<script>
 		const loginIn = _Config_.API_PATH + '/api/login'; // 登陆
-		const infordetail = _Config_.API_PATH + '/api/getRealDetail'//广告列表
-		const colectinfo = _Config_.API_PATH + '/api/addCollection'//收藏
-		var useris_vip = localStorage.getItem('useris_vip');
+		const infordetail = _Config_.API_PATH + '/api/getRealDetail' //广告列表
+		const colectinfo = _Config_.API_PATH + '/api/addCollection' //收藏
+		const useris_vip = localStorage.getItem('useris_vip');
+		const buyLinkDetail= _Config_.API_PATH + '/api/buyLinkDetail' //购买资讯详情链接查阅权限
 		function GetUrlParam(paraName) {
 			var url = document.location.toString();
 			var arrObj = url.split("?");
@@ -83,14 +96,13 @@
 				var arr;
 				for (var i = 0; i < arrPara.length; i++) {
 					arr = arrPara[i].split("=");
-		 
+
 					if (arr != null && arr[0] == paraName) {
 						return arr[1];
 					}
 				}
 				return "";
-			}
-			else {
+			} else {
 				return "";
 			}
 		}
@@ -98,80 +110,169 @@
 		console.log(real_id)
 		var user_id = localStorage.getItem("user_id");
 		new Vue({
-		    el:"#infor_detail",
-		    data:function() {
-				return{
-					details:{},
-					link:'',
+			el: "#infor_detail",
+			data: function() {
+				return {
+					details: {},
+					useris_vip:localStorage.getItem('useris_vip'),
+					link: '',
+					msg: '',
+					show: false,
+					actions: [{
+							id: 1,
+							name: '购买单条'
+						},
+						{
+							id: 2,
+							name: '开通会员'
+						},
+						//  {
+						// name: '选项3',
+						// subname: '描述信息'
+						//  }
+					]
+
 				}
-		    },
-			mounted(){
+			},
+			mounted() {
 				this.infordetailApi();
 			},
-		    methods:{
-				// 资讯详情
-				infordetailApi (){
+			methods: {
+				alertMenu() {
+					this.show = true;
+				},
+				onSelect(item) {
+					console.log(item);
+					if (item.id == 1) {
+						this.buyLinkDetailApi();
+						// $(".seemorelink").show();
+						// $(".state_red").show();
+					} else if(item.id == 2) {
+						window.location.href = '../personal/member.html'
+					}
+					// this.show = false;
+					// this.$toast({
+					// 	message: item.name,
+					// 	duration: 500
+					// })
+				},
+				toCancel() {
+					console.log('已取消');
+				},
+				buyLinkDetailApi(){
 					createAjax({
-						type: 'GET',
+						type: 'POST',
 						dataType: 'JSON',
-						url: infordetail,
-						data: {	
-							real_id:real_id,
-							user_id:user_id
+						url: buyLinkDetail,
+						data: {
+							real_id: real_id,
+							user_id: user_id
 						}
 					}).success(res => {
 						console.log(res);
-						this.details = res.data;
-						if(res.data.link){
-							this.link = res.data.link;
-						}
-						if(res.data){
-							$(".infor_updetail").html(res.data.images_detail)
+						if(res.code == '1'){
+							this.show = false;
+							// 调用支付按钮
+							WeixinJSBridge.invoke(
+							   'getBrandWCPayRequest', {
+									"appId":res.data.appId,     //公众号名称，由商户传入     
+									"timeStamp":res.data.timeStamp,         //时间戳，自1970年以来的秒数     
+									"nonceStr":res.data.nonceStr, //随机串     
+									"package":res.data.package,     
+									"signType":"MD5",         //微信签名方式：     
+									"paySign": res.data.paySign//微信签名 
+								},
+								function(res){
+									console.log("微信支付返回值:");
+									console.log(res);
+									if (res.err_msg == "get_brand_wcpay_request:ok") {
+										// 使用以上方式判断前端返回,微信团队郑重提示：
+										//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+										alert("get_brand_wcpay_request:ok");
+									}
+											
+									// alert(res.err_msg);
+									// alert(res); // 显示是个 Object
+								}
+							);
+						}else if(res.code == '-1'){
+							if(res.msg == '已购买，请勿重复购买'){
+								$(".seemorelink").show();
+								$(".state_red").show();
+								this.show = false;
+							}else{
+								layer.msg(res.msg);
+								this.show = false;
+							}
 							
-						}else{
-							console.log("banner暂未更新！")
-						}	
+						}
 					}).error(err => {
 						console.log(err);
 					})
 				},
-				colectFun () {
+				// 资讯详情
+				infordetailApi() {
+					createAjax({
+						type: 'GET',
+						dataType: 'JSON',
+						url: infordetail,
+						data: {
+							real_id: real_id,
+							user_id: user_id
+						}
+					}).success(res => {
+						console.log(res);
+						this.details = res.data;
+						if (res.data.link) {
+							this.link = res.data.link;
+						}
+						if (res.data) {
+							$(".infor_updetail").html(res.data.images_detail)
+
+						} else {
+							console.log("banner暂未更新！")
+						}
+					}).error(err => {
+						console.log(err);
+					})
+				},
+				colectFun() {
 					createAjax({
 						type: 'POST',
 						dataType: 'JSON',
 						url: colectinfo,
-						data: {	
-							real_id:real_id,
-							user_id:user_id
+						data: {
+							real_id: real_id,
+							user_id: user_id
 						}
 					}).success(res => {
 						console.log(res);
 						layer.msg('收藏成功！');
 						// alert(res.msg);
-						
+
 					}).error(err => {
 						console.log(err);
 					})
 				},
-				assessFun(){
-					if(this.link){
-						window.location.href='../assess/assess_uplade.html?link='+this.link+'&';
-					}else{
-						window.location.href='../assess/assess_uplade.html'
+				assessFun() {
+					if (this.link) {
+						window.location.href = '../assess/assess_uplade.html?link=' + this.link + '&';
+					} else {
+						window.location.href = '../assess/assess_uplade.html'
 					}
 				},
-				getSeemoreFun(){
+				getSeemoreFun() {
 					console.log(useris_vip)
-					if(useris_vip == 1){
+					if (useris_vip == 1) {
 						$(".seemorelink").show();
 						$(".state_red").show();
-					}else{
-						window.location.href='../personal/member.html'
+					} else {
+						window.location.href = '../personal/member.html'
 					}
-					
+
 				},
 				// 一键复制代码
-				copyUrl2(){
+				copyUrl2() {
 					var Url2 = document.getElementById("copy_link");
 					Url2.select(); // 选择对象
 					document.execCommand("Copy"); // 执行浏览器复制命令
@@ -179,6 +280,5 @@
 				}
 			},
 		})
-		
 	</script>
 </html>

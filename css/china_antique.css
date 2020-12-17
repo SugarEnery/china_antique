@@ -417,12 +417,15 @@ dl.experts_content dd{
 }
 .infor_seedetail{
 	float: right;
+	font-size: .28rem;
 	color:#323232;
 	border:#000 solid 1px;
 	padding:.1rem .1rem;
 	border-radius: .1rem;
 }
-
+.action_sheet{
+	
+}
 .center_img{
 	
 }
