@@ -8,12 +8,20 @@
 		<link href="../../css/swiper.min.css" rel="stylesheet" />
 		<link href="../../css/iconfont.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../../css/swiper-3.2.7.min.css" />
+		<link href="../../css/layer.css" rel="stylesheet" />
 		<script src="../../js/jquery-1.11.3.js" type="text/javascript"></script>
 		<script src="../../js/rem.js" type="text/javascript"></script>
 		<script src="../../js/swiper.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="../../js/swiper-3.4.0.jquery.min.js" ></script>
 		<script src="../../js/config.js"></script>
+		<script src="../../js/layer.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<link rel="stylesheet" href="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/index.css">
+		<!-- 引入 Vue 和 Vant 的 JS 文件 -->
+		<script src="https://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js"></script>
+		<script src="http://cdn.suoluomei.com/common/js2.0/axios/axios.min.js"></script>
+		<script src="https://cdn.suoluomei.com/common/js2.0/vue/v2.5.16/vue.js"></script>
+		<script src="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/vant.min.js"></script>
 		<title>专家鉴定</title>
 		<style>
 			body {
@@ -24,50 +32,52 @@
 				padding: 0;
 				font-family: "Microsoft Yahei";
 			}
+			.upload-img {
+				display: flex;
+				flex-wrap: wrap;
+				/* padding: 0 .3rem; */
+			}
+			.img-box {
+				width: 88px;
+				height: 88px;
+				margin-right: 8px;
+				margin-bottom: 8px;
+			}
+			.image {
+				width: 88px;
+				height: 88px;
 			
+			}
 		</style>
 	</head>
 	<body>
 		<div class="container" id="container">
 			<div class="expertify_list">
-				<div class="swiper-slide swiper-no-swiping" data-id="" @click="expertClick('+json[i].id+')">
+				<div class="swiper-slide swiper-no-swiping">
 					<div class="index_classify_content">
 						<dl>
 							<dt><img src="../../img/111.jpg"></dt>
-							<dd class="inclassify_title">{{name}}</dd>
+							<dd class="inclassify_title">{{details.name}}</dd>
 							<dd class="expert_introduce"><i class="iconfont jian_icon">&#xe626;</i>玉器</dd>
 						</dl>
 					</div>
+				</div>
 			</div>
 			<div class="imgUpload_content">
-				<!-- <p class="infor_content_title">上传藏品图片</p> -->
-				<div class="feed_add_images">
-					<p class="feedback_div_title">上传藏品图片</p>
-					<div class="containerimg">
-						<!--    照片添加    -->
-						<div class="z_photo" id="z_photo">
-							<div class="z_file">
-								<input class="huodong-msg" type="file" name="file" id="file" value="" accept="image/*" multiple @onchange="imgChange(this,'z_photo','z_file');" />
-							</div>
-						</div>
-					
-						<!--遮罩层-->
-						<div class="z_mask">
-							<!--弹出框-->
-							<div class="z_alert">
-								<p>确定要删除这张图片吗？</p>
-								<p>
-									<span class="z_cancel">取消</span>
-									<span class="z_sure">确定</span>
-								</p>
-							</div>
-						</div>
-					</div><!-- container -->
+				<p class="infor_content_title">上传藏品图片</p>
+				<div class="upload-img">
+					<div class="img-box" v-for="(item,index) in uploadImages" :key="index">
+						<img class="image" :src="item">
+					</div>　　
+					<!-- vant的upload组件 -->
+					<van-uploader :after-read="imgChange" accept="image/*" style="width: 88px;height:88px;">
+						<img src="../../img/icon_input_add.png" style="width: 100%;height: 100%;">
+					</van-uploader>
 				</div>
 				<div class="feedback_div">
-					<input name="question_type" value="{$type}" type="hidden">
+					<input name="question_type" value="" type="hidden">
 					<p class="feedback_div_title">补充鉴赏需求</p>
-					<textarea class="feedback_input" name="content" placeholder="我们将为您不断改进"></textarea>
+					<textarea class="feedback_input" name="content" placeholder="我们将为您不断改进" ></textarea>
 				</div>
 			</div>
 			<input type="button" value="提交"  class="expertIdent_btn" @click="expertIdentFun()"/>
@@ -78,12 +88,16 @@
 		const getExpertAppraisalDetailApi = _Config_.API_PATH + '/api/getExpertAppraisalDetail'//专家鉴定详情
 		const expertAppraisalCreate = _Config_.API_PATH + '/api/expertAppraisalCreate'//专家鉴定
 		const imageUpload = _Config_.API_PATH + '/api/upload' //上传图片
+		var user_id = localStorage.getItem('user_id');
 		var app = new Vue({
 			el: '#container',
-			data:function() {
+			data() {
 				return{
 					details:{},
 					infoLIst:[],
+					uploadImages: [],
+					expert_user_id:'',
+					expert_id:'',
 				}
 			},
 			mounted(){
@@ -111,18 +125,19 @@
 							return "";
 						}
 					}
-					var expert_user_id = GetUrlParam("id") //获取当前链接指定字段
+					this.expert_user_id = GetUrlParam("id");
 					createAjax({
 						type: 'GET',
 						dataType: 'JSON',
 						url: getExpertAppraisalDetailApi,
 						data: {
-							expert_user_id,
+							expert_user_id:this.expert_user_id,
 						},
 					}).success(res => {
 						console.log(res);
-						var json = res.data.data;
+						var json = res.data;
 						this.details = json;
+						this.expert_id = res.data.id;
 						// 推荐指数
 					}).error(err => {
 						console.log(err);
@@ -130,134 +145,90 @@
 				},
 				// 提交鉴定
 				expertIdentFun(){
+					var appraisal_need = $(".feedback_input").val();
+					console.log(appraisal_need)
 					createAjax({
 						type: 'POST',
 						dataType: 'JSON',
 						url: expertAppraisalCreate,
 						data: {
-							expert_id,
-							user_id,
-							images,
-							appraisal_need
+							expert_id:this.expert_id,
+							user_id:user_id,
+							images:this.uploadImages,
+							appraisal_need:appraisal_need
 						},
 					}).success(res => {
 						console.log(res);
 						var json = res.data.data;
-						$(".expertify_list").empty();
-						for(var i=0;i<json.length;i++){
-							$(".expertify_list").append('<div class="swiper-slide swiper-no-swiping" data-id="" onclick="expertClick('+json[i].id+')"><div class="index_classify_content"><dl><dt><img src="'+json[i].image+'"></dt><dd class="inclassify_title">'+json[i].name+'</dd><dd class="expert_introduce">'+json[i].content+'</dd></dl></div>')
+						if(res.code == "1"){
+							// 调用支付按钮
+							WeixinJSBridge.invoke(
+							   'getBrandWCPayRequest', {
+									"appId":res.data.appId,     //公众号名称，由商户传入     
+									"timeStamp":res.data.timeStamp,         //时间戳，自1970年以来的秒数     
+									"nonceStr":res.data.nonceStr, //随机串     
+									"package":res.data.package,     
+									"signType":"MD5",         //微信签名方式：     
+									"paySign": res.data.paySign//微信签名 
+								},
+								function(res){
+									console.log("微信支付返回值:");
+									console.log(res);
+									if (res.err_msg == "get_brand_wcpay_request:ok") {
+										// 使用以上方式判断前端返回,微信团队郑重提示：
+										//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+										alert("get_brand_wcpay_request:ok");
+									}
+									layer.msg('提交成功！');	
+									setTimeout(window.location.reload(), 500);
+									
+									// alert(res.err_msg);
+									// alert(res); // 显示是个 Object
+								}
+							); 
+							
+						}else{
+							layer.msg(res.msg)
 						}
-						// 推荐指数
 					}).error(err => {
 						console.log(err);
 					})
 				},
 				// 添加图片
-				imgChange(obj,obj1, obj2) {
-					// console.log(obj.files[0]);
-					var fileNum1 = 0;
-					var fileNum2 = event.target.files.length;
-					var a = document.getElementById("z_photo"),
-						b = a.getElementsByTagName("div");
-					fileNum1 = b.length;
-					var j = fileNum1 + fileNum2 - 1;
-					//上传图片个数限制
-					if(fileNum1 > 5 || j > 5) {
-						alert("最多只能上传5张图片！");
-						return;
-					}
-					
-					//获取点击的文本框
-					var file = document.getElementById("file");
-					//存放图片的父级元素
-					var imgContainer = document.getElementsByClassName(obj1)[0];
-					//获取的图片文件
-					var fileList = file.files;
-					//文本框的父级元素
-					var input = document.getElementsByClassName(obj2)[0];
-					var imgArr = [];
-					//遍历获取到得图片文件
-					for(var i = 0; i < fileList.length; i++) { 
-						var imgUrl = window.URL.createObjectURL(file.files[i]);
-						// console.log(imgUrl);
-						//进行ajax上传图片并返回图片路径
-						var formData = new FormData(); 
-						formData.append('picture',file.files[i]);//命名传值的字段
-						$.ajax({ 
-								url: imageUpload, 
-								type: 'POST', 
-								cache: false, //上传文件不需要缓存 
-								data: formData,
-								dataType:'JSON',
-								processData: false, // 告诉jQuery不要去处理发送的数据 
-								contentType: false, 
-								headers:{
-									'uid':localStorage.getItem("user_id")
-								},
-								// 告诉jQuery不要去设置Content-Type请求头 
-								success: function (data) {
-									console.log(data);
-									question_img.push(data.id)
-									//添加input框
-									imgArr.push(imgUrl);
-									var img = document.createElement("img");
-									img.setAttribute("src", data.img_url);
-									var imgAdd = document.createElement("div");
-									var imgAddInput = document.createElement("input");
-									imgAddInput.setAttribute("type", "hidden");
-									imgAddInput.setAttribute("name", "imgs[]");
-									imgAddInput.setAttribute("value", data.img_url);
-									imgAdd.appendChild(imgAddInput);
-									imgAdd.setAttribute("class", "z_addImg");
-									imgAdd.appendChild(img);
-									imgContainer.appendChild(imgAdd);
-									//添加进去
-									file.classList.add("z_cl");
-									this.imgRemove();
-									$(".hidden_one").show();
-							}, 
-							error: function (data) {
-								alert("上传失败");
-								return; 
-							} 
-						})
-					};
-					
+				imgChange(file) {
+					const that = this;
+					console.log(file); //file文件如下图
+					var formData = new FormData(); //构造一个 FormData，把后台需要发送的参数添加
+					formData.append('file', file.file); //接口需要传的参数
+					$.ajax({ 
+						url: imageUpload, 
+						type: 'POST', 
+						cache: false, //上传文件不需要缓存 
+						data: formData,
+						dataType:'JSON',
+						processData: false, // 告诉jQuery不要去处理发送的数据 
+						contentType: false, 
+						headers:{
+							'uid':localStorage.getItem("user_id")
+						},
+						// 告诉jQuery不要去设置Content-Type请求头 
+						success: function (data) {
+							console.log(data);
+							imgurl = 'http://api.chinabogu.com' + data.data.filePath;
+							layer.msg('上传成功！');
+							// let str = data.data.filePath;
+							that.uploadImages.push(imgurl); //将图片地址存入一个数组中
+							
+						}, 
+						error: function (data) {
+							alert("上传失败");
+							return; 
+						} 
+					})
 				},
-				//删除图片
-				imgRemove() {
-					var imgList = document.getElementsByClassName("z_addImg");
-					var mask = document.getElementsByClassName("z_mask")[0];
-					var cancel = document.getElementsByClassName("z_cancel")[0];
-					var sure = document.getElementsByClassName("z_sure")[0];
-					var file = document.getElementById("file");
-					var subm = document.getElementsByClassName("feedback_submit");
-					for(var j = 0; j < imgList.length; j++) {
-						imgList[j].index = j;
-						imgList[j].onclick = function() {
-							var t = this;
-							mask.style.display = "block";
-							cancel.onclick = function() {
-								mask.style.display = "none";
-							};
-							sure.onclick = function() {
-								mask.style.display = "none";
-				
-								if(file.classList.contains("z_cl")) {
-									file.outerHTML = file.outerHTML;
-								}
-				
-								t.parentNode.removeChild(t);
-								file.classList.remove("z_cl");
-							};
-				
-						}
-					};
-					
-				},
-				expertIdentFun(){
-					window.location.href='expert_upload.html?id='+appraisal_id;
-				}
+				// expertIdentFun(){
+				// 	window.location.href='expert_upload.html?id='+this.expert_user_id;
+				// }
 			}
 		})
 		

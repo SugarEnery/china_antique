@@ -15,6 +15,13 @@
 		<script src="../../js/layer.js"></script>
 		<!-- 生产环境版本，优化了尺寸和速度 -->
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<link rel="stylesheet" href="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/index.css">
+		<!-- 引入 Vue 和 Vant 的 JS 文件 -->
+		<script src="https://cdn.suoluomei.com/common/js/jquery-2.1.4.min.js"></script>
+		<script src="http://cdn.suoluomei.com/common/js2.0/axios/axios.min.js"></script>
+		<script src="https://cdn.suoluomei.com/common/js2.0/vue/v2.5.16/vue.js"></script>
+		<script src="https://cdn.suoluomei.com/common/js2.0/npm/vant@2.2/lib/vant.min.js"></script>
+
 		<title>拍卖详情</title>
 	</head>
 	<body>
@@ -29,15 +36,15 @@
 					<div class="swiper-pagination"></div>
 				</div>
 				<!-- Swiper JS -->
-				<script src="../../js/swiper.min.js" type="text/javascript"></script>
+				<!-- <script src="../../js/swiper.min.js" type="text/javascript"></script> -->
 				<!-- Initialize Swiper -->
-				<script>
+				<!-- <script>
 				var swiper = new Swiper('.swiper-container', {
 				  pagination: {
 					el: '.swiper-pagination',
 				  },
 				});
-				</script>
+				</script> -->
 			</div>
 			<div class="infor_content">
 				<div class="auctiond_info">
@@ -74,7 +81,7 @@
 							</dd>
 						</dl>
 						<div v-show="infoLIst.length <= 0">
-							抢第一个沙发
+							<!-- 抢第一个沙发 -->
 						</div>
 					</div>
 					<div v-show="infoLIst.length > 3" @click="selectdownFun()" class="selecteBtn">
@@ -86,6 +93,9 @@
 				</div>
 			</div>
 			<input type="button" value="立即出价"  class="assess_btn" @click="auctionFun ()"/>
+			<van-dialog v-model="show" title="提示" show-cancel-button  :before-close="beforeClose">
+				<h1 class="actiontitle" rel="external nofollow">缴纳保证金</h1>
+			</van-dialog>
 		</div>
 	</body>
 	<script>
@@ -121,7 +131,8 @@
 				return{
 					details:{},
 					infoLIst:[],
-					slideBtn: '&#xe614;'
+					slideBtn: '&#xe614;',
+					show: false
 				}
 			},
 			mounted(){
@@ -169,8 +180,22 @@
 						console.log(err);
 					})
 				},
+				beforeClose: function (action, done){
+					if (action === 'confirm') { // 确认
+					    console.log('[点击事件 - 备注] - 确认');
+						this.getauctionFun();
+					    done(); // 关闭提示框
+					} else if (action === 'cancel') { // 取消
+					  console.log('[点击事件 - 备注] - 取消');
+					  done(); // 关闭提示框
+					}
+					
+				},
 				// 缴纳保证金
 				auctionFun (){
+					this.show = true;
+				},
+				getauctionFun (){
 					createAjax({
 						type: 'POST',
 						dataType: 'JSON',
@@ -219,8 +244,7 @@
 					}).error(err => {
 						console.log(err);
 					})
-				},
-				
+				}
 				
 			},
 		  

@@ -1,6 +1,9 @@
 *{
 	padding:0;
 	margin: 0;
+	/* color: #323232; */
+}
+a{
 	color: #323232;
 }
 i,b{
@@ -706,7 +709,7 @@ i.logistics_copy {
 	padding:.3rem 0;
 }
 .auction_content img{
-	width: 80%;
+	width: 100%;
 	margin-top: .5rem;
 }
 .auction_updetail dl{
@@ -730,6 +733,10 @@ i.logistics_copy {
 .actionup_name{
 	font-size: .3rem;
 	color: #323232;
+}
+.actiontitle{
+	text-align: center;
+	padding: .3rem 0;
 }
 .actionup_money{
 	padding:.2rem 0;
@@ -884,17 +891,22 @@ i.logistics_copy {
 	padding:.1rem .1rem;
 }
 /* 鉴定评估上传 */
+.assess_banner{
+	overflow: hidden;
+	height: 3.5rem;
+}
 .assess_banner img{
 	width: 100%;
 }
 .assess_content{
 	width: 90%;
-	margin: auto;
+	margin: .2rem auto 0;
 }
 .assess_content label{
 	display: block;
-	padding: .2rem 0;
+	padding: .3rem 0;
 	overflow: hidden;
+	border-bottom: #EEEEEE solid 1px;
 }
 .assess_btn{
 	background-color: darkred;
@@ -1064,7 +1076,7 @@ input.file-style{
 .imgUpload_content{
 	width: 100%;
 	margin: auto;
-	padding:.3rem 0 .3rem 0;
+	padding:.3rem 0 .3rem .2rem;
 }
 .feed_add_images{
 	background: #FFFFFF;
@@ -1211,7 +1223,7 @@ p.feedback_div_title{
 	border-radius: 5px;
 	font-size: 14px;
 	color: #333333;
-	/* margin-left: .3rem; */
+	padding: .2rem 0;
 	
 }
 
